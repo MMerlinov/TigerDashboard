@@ -140,14 +140,6 @@
         // Инициализируем клиент под именем db
         const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Добавьте этот блок после инициализации db
-        db.channel('any')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'employees' }, payload => {
-    console.log('Изменение в базе:', payload);
-    loadCloudData(); // Перезагружаем данные при любом изменении в таблице
-  })
-  .subscribe();
-
         let isAdmin = false;
         let employees = [];
         let gaugeChartInst = null;
