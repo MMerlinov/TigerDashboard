@@ -138,7 +138,7 @@
         const SUPABASE_ANON_KEY = "sb_publishable_NYYvXFGX8ZnVK0CyEFPehg_z58eWBut";
 
         // Инициализируем клиент базы данных в переменную db, чтобы не ломать библиотеку
-        const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let isAdmin = false;
         let employees = [];
