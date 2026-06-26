@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIGR CRM - Professional</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="sidebar-open">
+
+    <header class="main-header">
+        <div class="logo">
+            <span class="logo-mini"><b>T</b>CRM</span>
+            <span class="logo-lg"><b>TIGR</b> CRM</span>
+        </div>
+        <nav class="navbar">
+            <a href="#" class="sidebar-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </a>
+            <div class="navbar-custom-menu">
+                <div class="search-box">
+                    <input type="text" placeholder="Search...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#"><i class="fas fa-envelope"></i><span class="badge bg-green">4</span></a></li>
+                    <li><a href="#"><i class="fas fa-bell"></i><span class="badge bg-yellow">10</span></a></li>
+                    <li><a href="#"><i class="fas fa-flag"></i><span class="badge bg-red">9</span></a></li>
+                    <li class="user-menu">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff" alt="User Image">
+                        <span>Admin</span>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <aside class="main-sidebar">
+        <section class="sidebar">
+            <div class="user-panel">
+                <div class="pull-left image">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff" class="img-circle" alt="User Image">
+                </div>
+                <div class="pull-left info">
+                    <p>Admin User</p>
+                    <a href="#"><i class="fas fa-circle text-success"></i> Online</a>
+                </div>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="header">MAIN NAVIGATION</li>
+                <li class="active"><a href="#"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+                <li><a href="#"><i class="fas fa-th"></i> <span>Widgets</span></a></li>
+                <li><a href="#"><i class="fas fa-table"></i> <span>Таблицы данных</span></a></li>
+                <li><a href="#"><i class="fas fa-chart-pie"></i> <span>Статистика</span></a></li>
+                <li><a href="#"><i class="fas fa-cogs"></i> <span>Настройки</span></a></li>
+            </ul>
+        </section>
+    </aside>
+
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>Dashboard <small>Version 1.0</small></h1>
+            <button class="btn btn-primary" style="margin-top: 15px;" onclick="addNewRow()">
+                <i class="fas fa-user-plus"></i> Добавить сотрудника
+            </button>
+        </section>
+
+        <section class="content">
+            <div class="row row-tiles">
+                <div class="tile bg-blue">
+                    <div class="inner">
+                        <h3 id="totalUsers">0</h3>
+                        <p>Всего сотрудников</p>
+                    </div>
+                    <div class="icon"><i class="fas fa-users"></i></div>
+                </div>
+                <div class="tile bg-green">
+                    <div class="inner">
+                        <h3 id="totalData">0</h3>
+                        <p>Сумма данных</p>
+                    </div>
+                    <div class="icon"><i class="fas fa-chart-bar"></i></div>
+                </div>
+                <div class="tile bg-yellow">
+                    <div class="inner">
+                        <h3>90<sup style="font-size: 20px">%</sup></h3>
+                        <p>Эффективность</p>
+                    </div>
+                    <div class="icon"><i class="fas fa-tachometer-alt"></i></div>
+                </div>
+                <div class="tile bg-red">
+                    <div class="inner">
+                        <h3>0</h3>
+                        <p>Ошибки / Пропуски</p>
+                    </div>
+                    <div class="icon"><i class="fas fa-exclamation-triangle"></i></div>
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title"><i class="fas fa-list"></i> Показатели локальных коллег</h3>
+                </div>
+                <div class="box-body table-responsive">
+                    <table class="table table-hover" id="employeeTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 15%;">ID (Номер)</th>
+                                <th style="width: 35%;">Имя сотрудника</th>
+                                <th style="width: 25%;">Кол-во данных</th>
+                                <th style="width: 25%; text-align: right;">Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Управление боковым меню
+        function toggleSidebar() {
+            document.body.classList.toggle('sidebar-collapse');
+        }
+
+        // Взаимодействие с API базы данных (Python FastAPI)
+        const apiUrl = "http://127.0.0.1:8000/api/users";
+
+        async function loadData() {
+            try {
+                const response = await fetch(apiUrl);
+                const users = await response.json();
+                const tbody = document.getElementById('tableBody');
+                tbody.innerHTML = ''; 
+                
+                let totalDataCount = 0;
+
+                users.forEach(user => {
+                    totalDataCount += user.data_count;
+                    tbody.innerHTML += createRowHtml(user.id, user.name, user.data_count);
+                });
+
+                // Обновляем статистику в плитках
+                document.getElementById('totalUsers').innerText = users.length;
+                document.getElementById('totalData').innerText = totalDataCount;
+
+            } catch (error) {
+                console.error("Ошибка API: Запущен ли сервер на Python (uvicorn)?", error);
+            }
+        }
+
+        function createRowHtml(id, name, count) {
+            return `
+                <tr>
+                    <td>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fas fa-hashtag"></i></span>
+                            <input type="text" class="form-control id-field" value="${id}" ${id.includes('НК') ? 'readonly' : ''}>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fas fa-user"></i></span>
+                            <input type="text" class="form-control name-field" value="${name}">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="spinner-control">
+                            <button class="btn btn-default btn-sm" onclick="changeVal(this, -1)"><i class="fas fa-minus"></i></button>
+                            <input type="number" class="form-control text-center count-field" value="${count}">
+                            <button class="btn btn-default btn-sm" onclick="changeVal(this, 1)"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <button class="btn btn-success btn-sm" onclick="saveRow(this)"><i class="fas fa-save"></i> Сохранить</button>
+                    </td>
+                </tr>
+            `;
+        }
+
+        function changeVal(btn, step) {
+            const input = btn.parentElement.querySelector('.count-field');
+            let currentVal = parseInt(input.value) || 0;
+            input.value = Math.max(0, currentVal + step);
+        }
+
+        function addNewRow() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML += createRowHtml("НОВЫЙ_ID", "Имя сотрудника", 0);
+        }
+
+        async function saveRow(btn) {
+            const row = btn.closest('tr');
+            const id = row.querySelector('.id-field').value;
+            const name = row.querySelector('.name-field').value;
+            const count = parseInt(row.querySelector('.count-field').value);
+            const originalIcon = btn.innerHTML;
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Сохранение...';
+            btn.classList.add('disabled');
+
+            try {
+                const response = await fetch(apiUrl + "/update", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ id: id, name: name, data_count: count })
+                });
+
+                if (response.ok) {
+                    btn.innerHTML = '<i class="fas fa-check"></i> Готово';
+                    btn.classList.replace('btn-success', 'btn-primary');
+                    setTimeout(() => { 
+                        btn.innerHTML = '<i class="fas fa-save"></i> Сохранить'; 
+                        btn.classList.replace('btn-primary', 'btn-success');
+                        btn.classList.remove('disabled');
+                        loadData(); // Пересчитываем статистику
+                    }, 1500);
+                }
+            } catch (error) {
+                alert("Ошибка сохранения! Проверьте подключение к серверу.");
+                btn.innerHTML = originalIcon;
+                btn.classList.remove('disabled');
+            }
+        }
+
+        window.onload = loadData;
+    </script>
+</body>
+</html>

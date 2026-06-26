@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход в TIGR CRM</title>
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; overflow: hidden; color: white; }
+        
+        #tsparticles { position: absolute; width: 100%; height: 100%; z-index: 1; background: linear-gradient(135deg, #050505, #0a0a20, #0d1a12, #1a0a1a); background-size: 400% 400%; animation: gradientBG 15s ease infinite; }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        .login-box { position: relative; z-index: 2; width: 350px; padding: 40px; background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; text-align: center; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: none; background: rgba(0,0,0,0.3); color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; margin-top: 10px; background: #3c8dbc; border: none; color: white; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); }
+        .modal-content { background: rgba(255,255,255,0.1); margin: 15% auto; padding: 30px; width: 300px; border-radius: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.2); }
+        .settings-icon { position: absolute; bottom: 20px; right: 20px; font-size: 30px; cursor: pointer; z-index: 3; }
+    </style>
+</head>
+<body>
+    <div id="tsparticles"></div>
+    <div class="login-box">
+        <h2>TIGR CRM</h2>
+        <input type="text" id="loginUser" placeholder="Логин">
+        <input type="password" id="loginPass" placeholder="Пароль">
+        <button onclick="window.location.href='index.html'">ВОЙТИ</button>
+
+        <div id="adminPanel" style="display:none; margin-top:20px; border-top:1px solid #444; padding-top:15px; text-align:left;">
+            <input type="text" id="regUser" placeholder="Имя пользователя">
+            <input type="password" id="regPass" placeholder="Пароль">
+            <select id="regRole"><option value="reader">Читатель</option><option value="moderator">Модератор</option><option value="admin">Администратор</option><option value="superior">Высший</option></select>
+            <button onclick="saveNewAccount()" style="background:#00a65a;">Создать аккаунт</button>
+        </div>
+    </div>
+
+    <div class="settings-icon" onclick="document.getElementById('pinModal').style.display='block'">⚙️</div>
+
+    <div id="pinModal" class="modal">
+        <div class="modal-content">
+            <h3>Код доступа</h3>
+            <input type="password" id="modalPin" placeholder="PIN" maxlength="4">
+            <button onclick="checkModalPin()">Проверить</button>
+        </div>
+    </div>
+
+    <script>
+        tsParticles.load("tsparticles", { particles: { number: { value: 60 }, links: { enable: true, distance: 150 }, move: { enable: true, speed: 1 } }, interactivity: { events: { onhover: { enable: true, mode: "grab" } } } });
+
+        function checkModalPin() {
+            if(document.getElementById('modalPin').value === "0402") {
+                document.getElementById('pinModal').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+            } else { alert("Неверный PIN!"); }
+        }
+
+        async function saveNewAccount() {
+            const data = { username: document.getElementById('regUser').value, password: document.getElementById('regPass').value, role: document.getElementById('regRole').value };
+            const response = await fetch('http://127.0.0.1:8000/api/register', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+            if(response.ok) alert("Аккаунт создан!");
+        }
+    </script>
+</body>
+</html>
