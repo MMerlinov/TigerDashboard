@@ -1,37 +1,41 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
     <meta charset="UTF-8">
     <title>Вход в TIGR CRM</title>
     <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; overflow: hidden; color: white; }
-        
         #tsparticles { position: absolute; width: 100%; height: 100%; z-index: 1; background: linear-gradient(135deg, #050505, #0a0a20, #0d1a12, #1a0a1a); background-size: 400% 400%; animation: gradientBG 15s ease infinite; }
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
         .login-box { position: relative; z-index: 2; width: 350px; padding: 40px; background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; text-align: center; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: none; background: rgba(0,0,0,0.3); color: white; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; margin-top: 10px; background: #3c8dbc; border: none; color: white; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: none; background: rgba(0,0,0,0.3); color: white; box-sizing: border-box; font-size: 0.95rem; }
+        input:focus, select:focus { outline: 1px solid #3c8dbc; background: rgba(0,0,0,0.5); }
+        button { width: 100%; padding: 12px; margin-top: 10px; background: #3c8dbc; border: none; color: white; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.2s; }
+        button:hover { background: #286090; }
         .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); }
-        .modal-content { background: rgba(255,255,255,0.1); margin: 15% auto; padding: 30px; width: 300px; border-radius: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.2); }
-        .settings-icon { position: absolute; bottom: 20px; right: 20px; font-size: 30px; cursor: pointer; z-index: 3; }
+        .modal-content { background: #222; margin: 15% auto; padding: 30px; width: 300px; border-radius: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .settings-icon { position: absolute; bottom: 20px; right: 20px; font-size: 30px; cursor: pointer; z-index: 3; opacity: 0.5; transition: 0.3s; }
+        .settings-icon:hover { opacity: 1; }
     </style>
 </head>
 <body>
     <div id="tsparticles"></div>
     <div class="login-box">
-        <h2>TIGR CRM</h2>
+        <h2 style="font-family: 'Segoe UI', sans-serif; letter-spacing: 2px; color: #3c8dbc;">TIGR CRM</h2>
         <input type="text" id="loginUser" placeholder="Логин">
         <input type="password" id="loginPass" placeholder="Пароль">
-        <button onclick="window.location.href='index.html'">ВОЙТИ</button>
+        <button onclick="handleLogin()">ВОЙТИ</button>
 
         <div id="adminPanel" style="display:none; margin-top:20px; border-top:1px solid #444; padding-top:15px; text-align:left;">
+            <h4 style="margin: 0 0 10px 0; color: #00a65a;">Регистрация пользователей</h4>
             <input type="text" id="regUser" placeholder="Имя пользователя">
             <input type="password" id="regPass" placeholder="Пароль">
-            <select id="regRole"><option value="reader">Читатель</option><option value="moderator">Модератор</option><option value="admin">Администратор</option><option value="superior">Высший</option></select>
+            <select id="regRole">
+                <option value="user">Пользователь/Читатель</option>
+                <option value="admin">Администратор</option>
+            </select>
             <button onclick="saveNewAccount()" style="background:#00a65a;">Создать аккаунт</button>
         </div>
     </div>
@@ -40,15 +44,47 @@
 
     <div id="pinModal" class="modal">
         <div class="modal-content">
-            <h3>Код доступа</h3>
-            <input type="password" id="modalPin" placeholder="PIN" maxlength="4">
+            <h3>Код инженера</h3>
+            <input type="password" id="modalPin" placeholder="PIN" maxlength="4" style="text-align:center; letter-spacing:5px;">
             <button onclick="checkModalPin()">Проверить</button>
+            <button onclick="document.getElementById('pinModal').style.display='none'" style="background:#444; margin-top:5px;">Отмена</button>
         </div>
     </div>
 
     <script>
-        tsParticles.load("tsparticles", { particles: { number: { value: 100 }, links: { enable: true, distance: 170 }, move: { enable: true, speed: 0.4 } }, interactivity: { events: { onhover: { enable: true, mode: "grab" } } } });
+        tsParticles.load("tsparticles", { particles: { number: { value: 60 }, links: { enable: true, distance: 150 }, move: { enable: true, speed: 0.4 } } });
 
+        // ВСТАВЬТЕ СЮДА ВАШИ РЕАЛЬНЫЕ КЛЮЧИ SUPABASE
+        const SUPABASE_URL = "https://geolvowpvdxnimypcvfx.supabase.co"; 
+        const SUPABASE_ANON_KEY = "sb_publishable_NYYVxFGX8ZnVK0CyEFPehg_z58eWBut"; 
+        const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Авторизация по базе данных system_users
+        async function handleLogin() {
+            const user = document.getElementById('loginUser').value.trim();
+            const pass = document.getElementById('loginPass').value.trim();
+            
+            if(!user || !pass) { alert("Введите логин и пароль!"); return; }
+
+            // Ищем пользователя в облаке
+            let { data, error } = await db.from('system_users')
+                .select('*')
+                .eq('username', user)
+                .eq('password', pass)
+                .single();
+
+            if (error || !data) {
+                alert("Неверный логин или пароль!");
+            } else {
+                // Сохраняем данные сессии в браузер
+                localStorage.setItem('crm_username', data.username);
+                localStorage.setItem('crm_role', data.role);
+                // Переходим в систему
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Проверка PIN-кода инженера для открытия панели регистрации
         function checkModalPin() {
             if(document.getElementById('modalPin').value === "0402") {
                 document.getElementById('pinModal').style.display = 'none';
@@ -56,10 +92,23 @@
             } else { alert("Неверный PIN!"); }
         }
 
+        // Создание нового аккаунта напрямую в Supabase
         async function saveNewAccount() {
-            const data = { username: document.getElementById('regUser').value, password: document.getElementById('regPass').value, role: document.getElementById('regRole').value };
-            const response = await fetch('http://127.0.0.1:8000/api/register', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
-            if(response.ok) alert("Аккаунт создан!");
+            const user = document.getElementById('regUser').value.trim();
+            const pass = document.getElementById('regPass').value.trim();
+            const role = document.getElementById('regRole').value;
+
+            if(!user || !pass) { alert("Заполните все поля регистрации!"); return; }
+
+            const { error } = await db.from('system_users').insert([{ username: user, password: pass, role: role }]);
+            
+            if(error) {
+                alert("Ошибка базы данных: " + error.message);
+            } else {
+                alert(`Аккаунт ${user} успешно создан со статусом [${role}]!`);
+                document.getElementById('regUser').value = '';
+                document.getElementById('regPass').value = '';
+            }
         }
     </script>
 </body>
