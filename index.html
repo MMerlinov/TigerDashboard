@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>TIGER CRM | Cloud Metro Dashboard</title>
+<<<<<<< HEAD
     
     <link rel="icon" type="image/png" href="https://i.imgur.com/92aAKxU.png">
     
+=======
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/1041/1041883.png">
+>>>>>>> e1b2279 (бновление конфигурации Supabase и исправлений)
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
@@ -14,44 +18,37 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
     <style>
-        /* 4. КОМПАКТНЫЙ ДИЗАЙН: Уменьшен базовый шрифт и отступы */
         body, html { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow-x: hidden; color: #ffffff; background-color: transparent; font-size: 14px; }
-        
         #tsparticles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: linear-gradient(135deg, #050505, #0a0a20, #0d1a12, #1a0a1a); background-size: 400% 400%; animation: gradientBG 15s ease infinite; }
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
         .dashboard-container { padding: 15px 25px; position: relative; z-index: 2; max-width: 1600px; margin: 0 auto; }
         
-        .header { display: flex; align-items: center; margin-bottom: 15px; }
-        /* 1. КРАСИВЫЙ ШРИФТ ДЛЯ TIGER CRM */
+        .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
         .header h1 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 2.2rem; margin: 0; letter-spacing: 2px; color: #0078d7; text-transform: uppercase; text-shadow: 0 4px 10px rgba(0, 120, 215, 0.4); }
-        
+        .user-badge { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.05); padding: 5px 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
+        .btn-logout { background: #d13438; border: none; color: white; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+        .btn-logout:hover { background: #a80000; }
+
         .content-grid { display: grid; grid-template-columns: 60% 40%; gap: 15px; margin-bottom: 15px; }
         .col-left { display: flex; flex-direction: column; gap: 15px; }
         .col-right { display: flex; flex-direction: column; gap: 15px; }
-        
         .panel { background-color: rgba(45, 45, 48, 0.85); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; padding: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .panel-title { font-size: 1.05rem; color: #ccc; margin-top: 0; margin-bottom: 12px; font-weight: 600; border-bottom: 1px solid #3e3e42; padding-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-
         table { width: 100%; border-collapse: collapse; text-align: left; table-layout: fixed; }
         .col-id { width: 15%; } .col-name { width: 25%; }
         th { color: #888; font-weight: normal; font-size: 0.75rem; padding: 6px 2px; border-bottom: 2px solid #3e3e42; text-align: center; }
         th:first-child, th:nth-child(2) { text-align: left; }
         td { padding: 4px 2px; border-bottom: 1px solid #3e3e42; font-size: 0.85rem; text-align: center; vertical-align: middle; }
         td:first-child, td:nth-child(2) { text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        
         .user-id { color: #0078d7; font-family: monospace; font-size: 0.8rem; }
         .cell-input { width: 100%; max-width: 40px; padding: 4px; background: rgba(30, 30, 30, 0.8); border: 1px solid #3e3e42; color: white; text-align: center; border-radius: 3px; font-size: 0.85rem; }
         .cell-input:focus { border-color: #0078d7; outline: none; background: #111; }
         .cell-input:disabled { background: transparent; border: none; color: #fff; text-align: center; font-weight: bold; -moz-appearance: textfield; }
         .cell-input:disabled::-webkit-outer-spin-button, .cell-input:disabled::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         .cell-total { font-weight: bold; color: #107c10; font-size: 0.95rem; }
-        
         .row-totals { background-color: rgba(255, 255, 255, 0.03); font-weight: bold; border-top: 2px solid #0078d7; }
         .row-totals td { padding: 8px 2px; color: #0078d7; border-bottom: none; }
         .row-totals .grand-total { color: #107c10; font-size: 1rem; }
-
-        /* Стили для посещаемости */
         .att-cell { width: 25px; height: 25px; margin: 0 auto; border-radius: 4px; border: 1px solid #444; transition: 0.2s; }
         .att-0 { background-color: transparent; }
         .att-1 { background-color: #107c10; border-color: #107c10; box-shadow: 0 0 8px rgba(16, 124, 16, 0.5); }
@@ -59,54 +56,46 @@
         .att-3 { background-color: #d13438; border-color: #d13438; box-shadow: 0 0 8px rgba(209, 52, 56, 0.5); }
         .att-interactive { cursor: pointer; }
         .att-interactive:hover { opacity: 0.8; transform: scale(1.1); }
-
         .btn-delete { background-color: #d13438; color: white; border: none; padding: 2px 6px; cursor: pointer; border-radius: 2px; font-size: 0.75rem; }
         .btn-delete:hover { background-color: #a80000; }
-
         .chart-container { position: relative; width: 100%; height: 160px; display: flex; justify-content: center; align-items: flex-end; }
         .custom-legend { display: flex; justify-content: center; flex-wrap: nowrap; gap: 10px; margin-top: 15px; font-size: 0.8rem; border-top: 1px solid #3e3e42; padding-top: 10px; }
         .legend-item { display: flex; align-items: center; gap: 4px; white-space: nowrap; color: #aaa; }
         .legend-color { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
         .legend-value { color: #ffffff; font-weight: bold; }
-
-        /* Панель Общее (Global Metrics) */
         .global-table { width: 100%; text-align: center; margin-top: 5px; }
         .global-table th { font-size: 0.75rem; color: #888; border-bottom: 1px solid #444; padding-bottom: 5px;}
         .global-table td { padding: 8px 2px; font-size: 1.1rem; font-weight: bold; color: #fff; }
         .global-input { width: 100%; max-width: 45px; background: rgba(0, 120, 215, 0.2); border: 1px solid #0078d7; color: white; text-align: center; border-radius: 3px; font-weight: bold; padding: 4px; }
         .global-input:focus { background: rgba(0, 120, 215, 0.4); outline: none; }
         .global-sum { color: #f39c12; font-size: 1.2rem; }
-
-        .admin-toggle-btn { width: 100%; padding: 10px; background: rgba(37, 37, 38, 0.8); color: #888; border: 1px dashed #444; cursor: pointer; text-align: center; transition: 0.3s; font-size: 0.9rem; border-radius: 6px; backdrop-filter: blur(5px); }
-        .admin-toggle-btn:hover { background: rgba(51, 51, 51, 0.9); color: #fff; border-color: #0078d7; }
-
-        .admin-panel { background-color: rgba(45, 45, 48, 0.9); padding: 15px; border-left: 4px solid #d13438; display: flex; flex-wrap: wrap; gap: 15px; border-radius: 0 6px 6px 0; backdrop-filter: blur(5px); }
+        .admin-toggle-btn { width: 100%; padding: 10px; background: rgba(37, 37, 38, 0.8); color: #d13438; border: 1px dashed #d13438; text-align: center; font-size: 0.9rem; border-radius: 6px; backdrop-filter: blur(5px); font-weight: bold; }
+        .admin-panel { background-color: rgba(45, 45, 48, 0.9); padding: 15px; border-left: 4px solid #0078d7; display: flex; flex-wrap: wrap; gap: 15px; border-radius: 0 6px 6px 0; backdrop-filter: blur(5px); }
         .admin-section { flex: 1; min-width: 200px; }
         .admin-section h3 { margin-top: 0; font-weight: 400; color: #ccc; font-size: 1rem; border-bottom: 1px solid #3e3e42; padding-bottom: 8px; }
-        
         .input-group { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .input-group label { font-size: 0.85rem; color: #aaa; }
         .input-group input { width: 80px; padding: 6px; background: rgba(30, 30, 30, 0.8); border: 1px solid #3e3e42; color: white; text-align: right; border-radius: 3px; font-size: 0.85rem; }
-        
         .btn-metro { background-color: #0078d7; color: white; border: none; padding: 8px 12px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 5px; transition: 0.2s; border-radius: 3px; font-size: 0.85rem; }
         .btn-metro:hover { background-color: #005a9e; }
         .btn-add { background-color: #107c10; }
         .btn-add:hover { background-color: #0b580b; }
-
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); justify-content: center; align-items: center; }
-        .modal-content { background: #2d2d30; padding: 25px; width: 280px; border-top: 4px solid #0078d7; border-radius: 6px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .modal-content input { width: 100%; padding: 8px; margin: 12px 0; background: #1e1e1e; border: 1px solid #3e3e42; color: white; box-sizing: border-box; text-align: center; font-size: 1.1rem; letter-spacing: 5px; border-radius: 3px; }
-        
         .hidden { display: none !important; }
         .loading-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: #1e1e1e; display:flex; justify-content:center; align-items:center; z-index:9999; font-size:1.2rem; font-weight:300; }
     </style>
 </head>
 <body>
     <div id="tsparticles"></div>
-    <div id="loading" class="loading-overlay">Синхронизация данных...</div>
+    <div id="loading" class="loading-overlay">Синхронизация данных TIGER CRM...</div>
 
     <div class="dashboard-container">
-        <div class="header"><h1>TIGER CRM</h1></div>
+        <div class="header">
+            <h1>TIGER CRM</h1>
+            <div class="user-badge">
+                <span id="displayUsername" style="color:#0078d7; font-weight:bold;">Loading...</span>
+                <button class="btn-logout" onclick="logout()">Выйти</button>
+            </div>
+        </div>
 
         <div class="content-grid">
             <div class="col-left">
@@ -156,8 +145,7 @@
                             <tr><th>ПН</th><th>ВТ</th><th>СР</th><th>ЧТ</th><th>ПТ</th><th>СБ</th><th style="color:#f39c12;">ИТОГО</th></tr>
                         </thead>
                         <tbody>
-                            <tr id="globalDaysRow">
-                                </tr>
+                            <tr id="globalDaysRow"></tr>
                         </tbody>
                     </table>
                 </div>
@@ -169,7 +157,7 @@
             </div>
         </div>
 
-        <div id="adminModeBtn" class="admin-toggle-btn" onclick="openPinModal()">[ Включить Admin-Mode ]</div>
+        <div id="adminModeBtn" class="admin-toggle-btn hidden">[ Режим Чтения: Административная панель заблокирована ]</div>
 
         <div id="adminPanel" class="admin-panel hidden">
             <div class="admin-section">
@@ -192,25 +180,17 @@
         </div>
     </div>
 
-    <div id="pinModal" class="modal">
-        <div class="modal-content">
-            <h3>Вход в Admin-Mode</h3>
-            <input type="password" id="adminPin" placeholder="****" maxlength="4">
-            <button class="btn-metro" onclick="checkPin()">ПОДТВЕРДИТЬ</button>
-            <button class="btn-metro" style="background: #444; margin-top: 5px;" onclick="closePinModal()">ОТМЕНА</button>
-        </div>
-    </div>
-
     <script>
-        tsParticles.load("tsparticles", { particles: { number: { value: 80 }, links: { enable: true, distance: 150 }, move: { enable: true, speed: 0.3 } }, interactivity: { events: { onhover: { enable: true, mode: "grab" } } } });
+        tsParticles.load("tsparticles", { particles: { number: { value: 50 }, links: { enable: true, distance: 150 }, move: { enable: true, speed: 0.3 } } });
 
+        // ВСТАВЬТЕ СЮДА ВАШИ РЕАЛЬНЫЕ КЛЮЧИ SUPABASE
         const SUPABASE_URL = "https://geolvowpvdxnimypcvfx.supabase.co"; 
-        const SUPABASE_ANON_KEY = "sb_publishable_NYYVxFGX8ZnVK0CyEFPehg_z58eWBut";
+        const SUPABASE_ANON_KEY = "sb_publishable_NYYVxFGX8ZnVK0CyEFPehg_z58eWBut"; 
         const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let isAdmin = false;
         let employees = [];
-        let globalMetricsData = {}; // Для хранения всех глобальных данных
+        let globalMetricsData = {}; 
         let gaugeChartInst = null;
         let barChartInst = null;
         const dbDaysKeys = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
@@ -243,6 +223,7 @@
         }
 
         async function uploadGlobalMetrics() {
+            if(!isAdmin) return;
             const total = parseInt(document.getElementById('globalTotal').value) || 0;
             const zv = parseInt(document.getElementById('globalZV').value) || 0;
             const nikopol = parseInt(document.getElementById('globalNikopol').value) || 0;
@@ -263,7 +244,6 @@
             }
         }
 
-        // Рендер основной таблицы данных
         function renderTable() {
             const tbody = document.getElementById('employeeTableBody');
             tbody.innerHTML = '';
@@ -298,7 +278,6 @@
             updateLeaderboard();
         }
 
-        // Рендер таблицы посещаемости
         function renderAttendanceTable() {
             const tbody = document.getElementById('attendanceTableBody');
             tbody.innerHTML = '';
@@ -318,7 +297,6 @@
             });
         }
 
-        // Рендер панели Глобальные дни
         function renderGlobalDaysPanel() {
             const row = document.getElementById('globalDaysRow');
             let gDays = [
@@ -335,17 +313,17 @@
             }
         }
 
-        // Логика клика по посещаемости
         async function toggleAttendance(empIndex, dayIndex) {
             if(!isAdmin) return;
             let currentStatus = employees[empIndex].attendance[dayIndex] || 0;
-            let nextStatus = (currentStatus + 1) % 4; // 0 -> 1 -> 2 -> 3 -> 0
+            let nextStatus = (currentStatus + 1) % 4; 
             employees[empIndex].attendance[dayIndex] = nextStatus;
-            renderAttendanceTable(); // Мгновенный визуал
+            renderAttendanceTable(); 
             await db.from('employees').update({ [attKeys[dayIndex]]: nextStatus }).eq('id', employees[empIndex].id);
         }
 
         async function updateEmpDayInCloud(empIndex, dayIndex, value) {
+            if(!isAdmin) return;
             const intVal = parseInt(value) || 0;
             employees[empIndex].days[dayIndex] = intVal;
             renderTable();
@@ -353,6 +331,7 @@
         }
 
         async function updateGlobalDay(dayIndex, value) {
+            if(!isAdmin) return;
             const intVal = parseInt(value) || 0;
             const key = dbDaysKeys[dayIndex];
             globalMetricsData[key] = intVal;
@@ -361,7 +340,8 @@
         }
 
         async function addEmployee() {
-            const idVal = document.getElementById('newEmpId').value, nameVal = document.getElementById('newEmpName').value;
+            if(!isAdmin) return;
+            const idVal = document.getElementById('newEmpId').value.trim(), nameVal = document.getElementById('newEmpName').value.trim();
             if(!idVal || !nameVal) return alert('Введите данные!');
             const fullId = `NK_User#${idVal}`;
             const { error } = await db.from('employees').insert([{ id: fullId, name: nameVal }]);
@@ -371,6 +351,7 @@
         }
 
         async function deleteEmployee(id, index) {
+            if(!isAdmin) return;
             if(confirm('Удалить сотрудника?')) {
                 await db.from('employees').delete().eq('id', id);
                 employees.splice(index, 1);
@@ -381,7 +362,7 @@
         function initCharts() {
             gaugeChartInst = new Chart(document.getElementById('gaugeChart'), {
                 type: 'doughnut', data: { labels: ['Общие', 'ЖВ', 'Каменка', 'Никополь'], datasets: [{ data: [0,0,0,0], backgroundColor: ['#444','#f1c40f','#e67e22','#3498db'] }] },
-                options: { responsive: true, maintainAspectRatio: false, rotation: -90, circumference: 180, plugins: { legend: { display: false }, tooltip: {titleFont:{size:11}, bodyFont:{size:11}} } }
+                options: { responsive: true, maintainAspectRatio: false, rotation: -90, circumference: 180, plugins: { legend: { display: false } } }
             });
             barChartInst = new Chart(document.getElementById('barChart'), {
                 type: 'bar', data: { labels: [], datasets: [{ label: 'Объем', data: [], backgroundColor: '#107c10' }] },
@@ -402,24 +383,39 @@
             barChartInst.update();
         }
 
-        function openPinModal() { document.getElementById('pinModal').style.display = 'flex'; }
-        function closePinModal() { document.getElementById('pinModal').style.display = 'none'; }
-        
-        function checkPin() {
-            if (document.getElementById('adminPin').value === '0402') {
-                isAdmin = true; closePinModal();
-                document.getElementById('adminModeBtn').classList.add('hidden');
-                document.getElementById('adminPanel').classList.remove('hidden');
-                renderTable();
-                renderAttendanceTable();
-                renderGlobalDaysPanel();
-            } else alert('Неверно!');
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'login.html';
         }
 
         window.onload = async () => { 
+            // 1. ПРОВЕРКА СЕССИИ АВТОРИЗАЦИИ
+            const currentRole = localStorage.getItem('crm_role');
+            const currentUsername = localStorage.getItem('crm_username');
+
+            if (!currentRole || !currentUsername) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Выводим имя в интерфейс
+            document.getElementById('displayUsername').innerText = `${currentUsername} (${currentRole})`;
+
+            // 2. ОПРЕДЕЛЕНИЕ ПРАВ АДМИНИСТРАТОРА ИЗ БАЗЫ
+            if (currentRole === 'admin') {
+                isAdmin = true;
+                document.getElementById('adminPanel').classList.remove('hidden');
+                document.getElementById('adminModeBtn').classList.add('hidden');
+            } else {
+                isAdmin = false;
+                document.getElementById('adminModeBtn').classList.remove('hidden');
+                document.getElementById('adminPanel').classList.add('hidden');
+            }
+
             initCharts(); 
             await loadCloudData(); 
 
+            // Realtime-синхронизация данных
             db.channel('realtime-sync')
               .on('postgres_changes', { event: '*', schema: 'public', table: 'employees' }, () => {
                   if (document.activeElement?.tagName !== 'INPUT') loadCloudData();
