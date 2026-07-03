@@ -233,6 +233,14 @@
         }
 
         async function saveProfile() {
+            const pass = prompt("Запрос разрешения администратора. Введите пароль для внесения изменений:");
+            if (pass !== "0402") {
+                const msgEl = document.getElementById('statusMsg');
+                msgEl.style.color = '#ff4d4d';
+                msgEl.innerText = "Отказано в доступе: Неверный пароль администратора.";
+                return;
+            }
+
             const msgEl = document.getElementById('statusMsg');
             const btn = document.getElementById('saveBtn');
             const name = document.getElementById('empName').value.trim();
