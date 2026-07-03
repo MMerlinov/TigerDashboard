@@ -3,40 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <title>Вход в TIGR CRM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; overflow: hidden; color: white; }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', Tahoma, sans-serif; overflow: hidden; color: white; }
         #tsparticles { position: absolute; width: 100%; height: 100%; z-index: 1; background: linear-gradient(135deg, #050505, #0a0a20, #0d1a12, #1a0a1a); background-size: 400% 400%; animation: gradientBG 15s ease infinite; }
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        .login-box { position: relative; z-index: 2; width: 350px; padding: 40px; background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; text-align: center; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: none; background: rgba(0,0,0,0.3); color: white; box-sizing: border-box; font-size: 0.95rem; }
-        input:focus, select:focus { outline: 1px solid #3c8dbc; background: rgba(0,0,0,0.5); }
-        button { width: 100%; padding: 12px; margin-top: 10px; background: #3c8dbc; border: none; color: white; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.2s; }
-        button:hover { background: #286090; }
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); }
-        .modal-content { background: #222; margin: 15% auto; padding: 30px; width: 300px; border-radius: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        .settings-icon { position: absolute; bottom: 20px; right: 20px; font-size: 30px; cursor: pointer; z-index: 3; opacity: 0.5; transition: 0.3s; }
-        .settings-icon:hover { opacity: 1; }
+        
+        .login-box { position: relative; z-index: 2; width: 360px; padding: 45px; background: rgba(20, 20, 25, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.07); border-radius: 24px; text-align: center; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0 20px 50px rgba(0,0,0,0.7); animation: fadeIn 0.8s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translate(-50%, -45%); } to { opacity: 1; transform: translate(-50%, -50%); } }
+        
+        .login-box h2 { font-family: 'Montserrat', sans-serif; font-weight: 900; letter-spacing: 3px; color: #0078d7; margin-bottom: 30px; text-shadow: 0 0 15px rgba(0, 120, 215, 0.4); }
+        
+        .input-wrapper { position: relative; margin: 12px 0; }
+        input, select { width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid #2e2e32; background: rgba(0,0,0,0.5); color: white; box-sizing: border-box; font-size: 0.95rem; transition: all 0.3s ease; }
+        input:focus, select:focus { outline: none; border-color: #0078d7; background: rgba(0,0,0,0.7); box-shadow: 0 0 12px rgba(0, 120, 215, 0.4); }
+        
+        button { width: 100%; padding: 15px; margin-top: 20px; background: linear-gradient(135deg, #0078d7, #005a9e); border: none; color: white; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: all 0.3s ease; letter-spacing: 1px; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 7px 20px rgba(0, 120, 215, 0.5); }
+        button:active { transform: translateY(0); }
+        button:disabled { background: #444; cursor: not-allowed; transform: none; box-shadow: none; }
+        
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); backdrop-filter: blur(10px); }
+        .modal-content { background: rgba(25, 25, 30, 0.9); margin: 15% auto; padding: 35px; width: 320px; border-radius: 24px; text-align: center; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 20px 50px rgba(0,0,0,0.8); animation: scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes scaleUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        
+        .settings-icon { position: absolute; bottom: 30px; right: 30px; font-size: 26px; cursor: pointer; z-index: 3; opacity: 0.4; transition: all 0.3s ease; user-select: none; }
+        .settings-icon:hover { opacity: 1; transform: rotate(90deg); filter: drop-shadow(0 0 8px #0078d7); }
+        
+        .error-msg { color: #ff4d4d; font-size: 0.85rem; margin-top: 12px; min-height: 18px; display: block; font-weight: 600; }
     </style>
 </head>
 <body>
     <div id="tsparticles"></div>
     <div class="login-box">
-        <h2 style="font-family: 'Segoe UI', sans-serif; letter-spacing: 2px; color: #3c8dbc;">TIGR CRM</h2>
-        <input type="text" id="loginUser" placeholder="Логин">
-        <input type="password" id="loginPass" placeholder="Пароль">
-        <button onclick="handleLogin()">ВОЙТИ</button>
+        <h2>TIGR CRM</h2>
+        <div class="input-wrapper">
+            <input type="text" id="loginUser" placeholder="Логин" autocomplete="username">
+        </div>
+        <div class="input-wrapper">
+            <input type="password" id="loginPass" placeholder="Пароль" autocomplete="current-password">
+        </div>
+        <button id="loginBtn" onclick="handleLogin()">ВОЙТИ</button>
+        <span id="loginError" class="error-msg"></span>
 
-        <div id="adminPanel" style="display:none; margin-top:20px; border-top:1px solid #444; padding-top:15px; text-align:left;">
-            <h4 style="margin: 0 0 10px 0; color: #00a65a;">Регистрация пользователей</h4>
-            <input type="text" id="regUser" placeholder="Имя пользователя">
-            <input type="password" id="regPass" placeholder="Пароль">
+        <div id="adminPanel" style="display:none; margin-top:30px; border-top:1px solid rgba(255,255,255,0.08); padding-top:25px; text-align:left;">
+            <h4 style="margin: 0 0 15px 0; color: #2ecc71; text-align: center; font-family: 'Montserrat', sans-serif;">Регистрация сотрудника</h4>
+            <input type="text" id="regUser" placeholder="Имя пользователя" style="margin-bottom: 10px;">
+            <input type="password" id="regPass" placeholder="Пароль" style="margin-bottom: 10px;">
             <select id="regRole">
                 <option value="user">Пользователь/Читатель</option>
                 <option value="admin">Администратор</option>
             </select>
-            <button onclick="saveNewAccount()" style="background:#00a65a;">Создать аккаунт</button>
+            <button onclick="saveNewAccount()" style="background: linear-gradient(135deg, #2ecc71, #27ae60); margin-top:15px;">Создать аккаунт</button>
         </div>
     </div>
 
@@ -44,29 +64,36 @@
 
     <div id="pinModal" class="modal">
         <div class="modal-content">
-            <h3>Код инженера</h3>
-            <input type="password" id="modalPin" placeholder="PIN" maxlength="4" style="text-align:center; letter-spacing:5px;">
+            <h3 style="margin-top:0; font-family: 'Montserrat', sans-serif;">Код инженера</h3>
+            <input type="password" id="modalPin" placeholder="PIN" maxlength="4" style="text-align:center; letter-spacing:10px; font-size: 1.4rem; font-weight: bold; background: rgba(0,0,0,0.3);">
             <button onclick="checkModalPin()">Проверить</button>
-            <button onclick="document.getElementById('pinModal').style.display='none'" style="background:#444; margin-top:5px;">Отмена</button>
+            <button onclick="document.getElementById('pinModal').style.display='none'" style="background:transparent; border: 1px solid #444; margin-top:12px; color: #aaa;">Отмена</button>
         </div>
     </div>
 
     <script>
-        tsParticles.load("tsparticles", { particles: { number: { value: 60 }, links: { enable: true, distance: 150 }, move: { enable: true, speed: 0.4 } } });
+        tsParticles.load("tsparticles", { particles: { number: { value: 50 }, color: { value: "#0078d7" }, links: { enable: true, distance: 150, color: "#0078d7", opacity: 0.25 }, move: { enable: true, speed: 0.5 } } });
 
-        // ВСТАВЬТЕ СЮДА ВАШИ РЕАЛЬНЫЕ КЛЮЧИ SUPABASE
         const SUPABASE_URL = "https://geolvowpvdxnimypcvfx.supabase.co"; 
         const SUPABASE_ANON_KEY = "sb_publishable_NYYVxFGX8ZnVK0CyEFPehg_z58eWBut"; 
         const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Авторизация по базе данных system_users
+        document.getElementById('loginPass').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') handleLogin();
+        });
+
         async function handleLogin() {
             const user = document.getElementById('loginUser').value.trim();
             const pass = document.getElementById('loginPass').value.trim();
+            const btn = document.getElementById('loginBtn');
+            const errorSpan = document.getElementById('loginError');
             
-            if(!user || !pass) { alert("Введите логин и пароль!"); return; }
+            errorSpan.innerText = "";
+            if(!user || !pass) { errorSpan.innerText = "Введите логин и пароль!"; return; }
 
-            // Ищем пользователя в облаке
+            btn.disabled = true;
+            btn.innerText = "Авторизация...";
+
             let { data, error } = await db.from('system_users')
                 .select('*')
                 .eq('username', user)
@@ -74,25 +101,27 @@
                 .single();
 
             if (error || !data) {
-                alert("Неверный логин или пароль!");
+                errorSpan.innerText = "Неверный логин или пароль!";
+                btn.disabled = false;
+                btn.innerText = "ВОЙТИ";
             } else {
-                // Сохраняем данные сессии в браузер
                 localStorage.setItem('crm_username', data.username);
                 localStorage.setItem('crm_role', data.role);
-                // Переходим в систему
                 window.location.href = 'index.html';
             }
         }
 
-        // Проверка PIN-кода инженера для открытия панели регистрации
         function checkModalPin() {
             if(document.getElementById('modalPin').value === "0402") {
                 document.getElementById('pinModal').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
-            } else { alert("Неверный PIN!"); }
+                document.getElementById('modalPin').value = '';
+            } else { 
+                alert("Неверный PIN!"); 
+                document.getElementById('modalPin').value = '';
+            }
         }
 
-        // Создание нового аккаунта напрямую в Supabase
         async function saveNewAccount() {
             const user = document.getElementById('regUser').value.trim();
             const pass = document.getElementById('regPass').value.trim();
