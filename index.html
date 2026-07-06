@@ -37,14 +37,14 @@
             --shadow: 0 15px 35px rgba(0,0,0,0.6); 
         }
         [data-theme="light"] { 
-            --bg-grad-1: #f5f7fa; --bg-grad-2: #e4e8f0; --bg-grad-3: #dcedc8; --bg-grad-4: #e1bee7; 
-            --panel-bg: rgba(255, 255, 255, 0.88); 
-            --text-main: #222222; --text-muted: #555555; 
-            --border-color: rgba(0,0,0,0.08); 
-            --input-bg: rgba(240, 240, 240, 0.8); 
-            --input-border: #cccccc; 
-            --hover-row: rgba(0, 120, 215, 0.08); 
-            --shadow: 0 10px 30px rgba(0,0,0,0.1); 
+            --bg-grad-1: #f5f7fa !important; --bg-grad-2: #e4e8f0 !important; --bg-grad-3: #dcedc8 !important; --bg-grad-4: #e1bee7 !important; 
+            --panel-bg: rgba(255, 255, 255, 0.88) !important; 
+            --text-main: #222222 !important; --text-muted: #555555 !important; 
+            --border-color: rgba(0,0,0,0.08) !important; 
+            --input-bg: rgba(240, 240, 240, 0.8) !important; 
+            --input-border: #cccccc !important; 
+            --hover-row: rgba(0, 120, 215, 0.08) !important; 
+            --shadow: 0 10px 30px rgba(0,0,0,0.1) !important; 
         }
         
         body, html { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; background-color: transparent; font-size: 14px; color: var(--text-main); transition: color 0.4s ease; }
@@ -395,6 +395,7 @@
                     id: emp.id, 
                     name: emp.name, 
                     personal_color: emp.personal_color || '#0078d7',
+                    avatar_url: emp.avatar_url,
                     days: [emp.mon, emp.tue, emp.wed, emp.thu, emp.fri, emp.sat],
                     attendance: [emp.att_mon, emp.att_tue, emp.att_wed, emp.att_thu, emp.att_fri, emp.att_sat]
                 }));
@@ -467,14 +468,27 @@
                 let percent = (totalData / (metricsData.weekly_plan || 130)) * 100;
                 let tlClass = percent >= 100 ? 'tl-green' : (percent >= 75 ? 'tl-yellow' : 'tl-red');
 
+                // Формируем кружок аватара
+                let avatarHtml = emp.avatar_url 
+                    ? `<img src="${emp.avatar_url}" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 2px solid ${emp.personal_color};">`
+                    : `<div style="width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--input-bg); border: 2px solid ${emp.personal_color}; font-size: 13px;">${emp.name.charAt(0)}</div>`;
+
+                // Строка данных (реестр)
                 let trData = document.createElement('tr');
-                trData.innerHTML = `<td style="font-weight:700; color: ${emp.personal_color}; text-shadow: 0 0 8px ${emp.personal_color}40;">${emp.name}</td>` + 
+                trData.innerHTML = `<td style="font-weight:700; color: ${emp.personal_color}; text-shadow: 0 0 8px ${emp.personal_color}40; display: flex; align-items: center; gap: 12px; padding: 8px 6px;">
+                        ${avatarHtml}
+                        <span>${emp.name}</span>
+                    </td>` + 
                     emp.days.map((val, dIdx) => `<td><input type="number" class="cell-input" value="${val||0}" onchange="updateEmpDay(${index}, ${dIdx}, this.value)" ${disabledAttr}></td>`).join('') +
                     `<td><div class="traffic-light ${tlClass}" title="${Math.round(percent)}% от плана"></div></td><td style="font-weight:900;color:#107c10;">${totalData}</td>`;
                 tBodyData.appendChild(trData);
 
+                // Строка посещаемости
                 let trAtt = document.createElement('tr');
-                let attHtml = `<td style="font-weight:700; color: ${emp.personal_color};">${emp.name}</td>`;
+                let attHtml = `<td style="font-weight:700; color: ${emp.personal_color}; display: flex; align-items: center; gap: 12px; padding: 8px 6px;">
+                        ${avatarHtml}
+                        <span>${emp.name}</span>
+                    </td>`;
                 emp.attendance.forEach((st, dIdx) => {
                     let interactive = isAdmin ? 'att-interactive' : '';
                     let onClick = isAdmin ? `onclick="toggleAtt(${index}, ${dIdx})"` : '';
@@ -573,7 +587,7 @@
                     },
                     options: { 
                         responsive: true, maintainAspectRatio: false, rotation: -90, circumference: 180, 
-                        cutout: '55%', // ГРАФИК СДЕЛАН ТОЛЩЕ ПО ЗАПРОСУ
+                        cutout: '55%',
                         layout: { padding: { bottom: 10 } },
                         plugins: { legend: { position: 'bottom', labels: { color: labelColor, boxWidth: 12, padding: 12 } } } 
                     }
