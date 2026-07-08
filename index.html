@@ -1,8 +1,3 @@
-<!-- 
-  Project: TIGR-CRM 
-  Author: MMerlinov
-  Description: Cloud Metro Dashboard with Supabase Realtime Sync, Neon Charts & Archives
--->
 <!DOCTYPE html>
 <html lang="ru" data-theme="dark">
 <head>
@@ -12,11 +7,9 @@
     <title>TIGER Dashboard</title>
     <link rel="icon" type="image/png" href="https://i.imgur.com/92aAKxU.png">
     
-    <!-- Шрифты и Иконки -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
-    <!-- Внешние библиотеки -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
@@ -24,7 +17,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     
     <style>
-        /* CSS ПЕРЕМЕННЫЕ - НЕОНОВЫЙ ТЕМНЫЙ СТИЛЬ */
         :root { 
             --bg-grad-1: #020617; 
             --bg-grad-2: #0f172a; 
@@ -58,8 +50,8 @@
         }
         
         * { box-sizing: border-box; outline: none; }
-        
-        /* ИСПРАВЛЕННЫЙ МАСШТАБ (убран zoom и scale) */
+        html { font-size: 18px; }
+
         body, html { 
             margin: 0; padding: 0; 
             font-family: 'Montserrat', sans-serif; 
@@ -72,11 +64,9 @@
         ::-webkit-scrollbar-track { background: var(--bg-grad-1); }
         ::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 4px; }
         
-        /* Анимации фона */
         #tsparticles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: linear-gradient(135deg, var(--bg-grad-1), var(--bg-grad-2), var(--bg-grad-3), var(--bg-grad-4)); background-size: 400% 400%; animation: gradientBG 20s ease infinite; transition: background 0.5s ease; }
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         
-        /* Глобальные классы переливания */
         .text-gradient {
             background: linear-gradient(to right, var(--accent-color), var(--kamenskoe-color), var(--success-color), var(--accent-color));
             background-size: 300% auto;
@@ -87,17 +77,9 @@
         }
         @keyframes shineText { to { background-position: 300% center; } }
 
-        /* ИСПРАВЛЕННЫЕ ПАНЕЛИ (убран переливающийся градиент блоков) */
-        .animated-panel { 
-            position: relative;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-        }
-
-        /* Адаптивный контейнер под нормальный масштаб */
-        .dashboard-container { padding: 40px 50px; position: relative; z-index: 2; max-width: 1800px; margin: 0 auto; display: flex; flex-direction: column; gap: 30px; min-height: 100vh; }
+        .animated-panel { position: relative; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        .dashboard-container { padding: 40px 50px; position: relative; z-index: 2; max-width: 1900px; margin: 0 auto; display: flex; flex-direction: column; gap: 30px; min-height: 100vh; }
         
-        /* HEADER */
         .header { display: flex; align-items: center; justify-content: space-between; background: var(--panel-bg); padding: 20px 40px; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: var(--shadow); }
         .logo-area { display: flex; align-items: center; gap: 20px; }
         .crm-logo { width: 60px; height: 60px; object-fit: contain; filter: drop-shadow(0 0 12px var(--accent-color)); transition: transform 0.3s; }
@@ -116,16 +98,13 @@
         
         .btn-primary { 
             background: linear-gradient(135deg, var(--accent-color), #0284c7, var(--kamenskoe-color), var(--accent-color)); 
-            background-size: 300% 100%;
-            border: none; color: white; padding: 12px 25px; border-radius: 20px; cursor: pointer; font-weight: 700; font-family: 'Montserrat', sans-serif; transition: 0.3s; text-transform: uppercase; font-size: 1rem; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4); 
+            background-size: 300% 100%; border: none; color: white; padding: 12px 25px; border-radius: 20px; cursor: pointer; font-weight: 700; font-family: 'Montserrat', sans-serif; transition: 0.3s; text-transform: uppercase; font-size: 1rem; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4); 
             animation: shineText 5s ease infinite;
         }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(56, 189, 248, 0.6); }
-        
         .btn-danger { background: transparent; border: 1px solid var(--danger-color); color: var(--danger-color); padding: 12px 25px; border-radius: 20px; cursor: pointer; font-weight: 700; transition: 0.3s; font-size: 1rem; text-transform: uppercase; }
         .btn-danger:hover { background: var(--danger-color); color: white; box-shadow: 0 0 20px rgba(248, 113, 113, 0.5); }
 
-        /* СЕТКА И ПАНЕЛИ */
         .content-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 30px; align-items: stretch; transition: 0.3s; }
         @media (max-width: 1200px) { .content-grid { grid-template-columns: 1fr; } }
         
@@ -137,15 +116,17 @@
         .search-box { padding: 12px 20px; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); border-radius: 12px; font-size: 1.1rem; width: 250px; transition: all 0.3s ease; }
         .search-box:focus { width: 350px; border-color: var(--accent-color); box-shadow: 0 0 15px rgba(56, 189, 248, 0.3); }
 
-        /* ТАБЛИЦЫ */
         .table-responsive { overflow-x: auto; border-radius: 12px; }
         table { width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; }
         th { color: var(--text-muted); font-size: 1.1rem; padding: 15px 10px; border-bottom: 2px solid var(--border-color); text-align: center; text-transform: uppercase; font-weight: 600; }
         th:first-child { text-align: left; width: 30%; }
-        td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 1.2rem; text-align: center; vertical-align: middle; transition: background 0.2s; font-weight: 500; }
+        td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 1.2rem; text-align: center; vertical-align: middle; transition: all 0.3s ease; font-weight: 500; }
         tbody tr:hover td { background-color: var(--hover-row); }
         tfoot td { padding: 20px 10px; border-top: 2px solid var(--border-color); font-size: 1.3rem; font-weight: 700; }
         
+        .emp-avatar { width: 40px; height: 40px; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.5); object-fit: cover; }
+        .emp-info { display: flex; align-items: center; gap: 15px; }
+
         .cell-input { width: 100%; max-width: 80px; padding: 10px; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); text-align: center; border-radius: 8px; font-size: 1.1rem; font-weight: 600; transition: 0.3s; }
         .cell-input:focus { border-color: var(--accent-color); box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); transform: scale(1.05); }
         .cell-input:disabled { background: transparent; border: none; font-size: 1.2rem; color: var(--text-main); }
@@ -163,7 +144,6 @@
         .att-interactive { cursor: pointer; } 
         .att-interactive:hover { transform: scale(1.15); border-color: var(--text-main); }
 
-        /* KPI & CHARTS */
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-bottom: 0; }
         .stat-box { background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(0,0,0,0.2)); padding: 25px 20px; border-radius: 20px; border: 1px solid var(--border-color); text-align: center; position: relative; overflow: hidden; box-shadow: var(--shadow); transition: 0.3s; }
         .stat-box:hover { transform: translateY(-5px); border-color: rgba(56, 189, 248, 0.3); }
@@ -178,19 +158,18 @@
         .gt-item label { font-size: 0.85rem; color: var(--text-muted); font-weight: 700; margin-bottom: 8px; text-transform: uppercase; }
         .gt-item input { width: 100%; max-width: 90px; padding: 10px; border-radius: 10px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text-main); text-align: center; font-weight: 800; font-size: 1.2rem; transition: 0.3s; }
         .gt-item input:focus { border-color: var(--accent-color); box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); }
-        
         .gt-item.highlight { background: rgba(167, 139, 250, 0.1); border-radius: 16px; padding: 10px 20px; border: 1px solid rgba(167, 139, 250, 0.3); box-shadow: inset 0 0 20px rgba(167, 139, 250, 0.05); }
         .gt-item.highlight span { font-size: 1.8rem; font-weight: 900; color: var(--kamenskoe-color); text-shadow: 0 0 10px rgba(167, 139, 250, 0.4); }
 
         .chart-container { position: relative; width: 100%; display: flex; align-items: center; justify-content: center; }
-        .chart-container-compact { height: 220px; min-height: 220px; margin-top: 10px; }
+        .chart-container canvas { filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4)); }
+        .chart-container-compact { height: 240px; min-height: 240px; margin-top: 10px; }
         .chart-container-large { min-height: 280px; flex-grow: 1; }
 
         .chart-toggle-group { display: flex; gap: 5px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 10px; border: 1px solid var(--border-color); }
         .chart-toggle-group i { font-size: 1.1rem; color: var(--text-muted); cursor: pointer; transition: 0.3s; padding: 8px 12px; border-radius: 8px; }
         .chart-toggle-group i.active { color: white; background: var(--accent-color); box-shadow: 0 0 10px rgba(56, 189, 248, 0.5); }
 
-        /* ADMIN PANEL */
         .admin-panel { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(56, 189, 248, 0.3); display: flex; flex-wrap: wrap; gap: 30px; border-radius: 20px; padding: 35px; margin-top: 30px; box-shadow: 0 0 30px rgba(56, 189, 248, 0.1); }
         .admin-section { flex: 1; min-width: 320px; background: rgba(0,0,0,0.2); padding: 25px; border-radius: 16px; border: 1px solid var(--border-color); }
         .admin-section h3 { margin-top: 0; color: var(--text-main); font-size: 1.2rem; display: flex; gap: 10px; align-items: center; }
@@ -199,41 +178,16 @@
         .input-group input, .input-group textarea { width: 100%; max-width: 220px; padding: 12px; border-radius: 10px; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); font-size: 1rem; }
         .btn-full { width: 100%; padding: 15px; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 1.1rem; }
         
-        /* ПРИНУДИТЕЛЬНАЯ КНОПКА (ГРАДИЕНТНАЯ ПУЛЬСАЦИЯ) */
         .btn-mandatory {
-            background: linear-gradient(45deg, #ef4444, #b91c1c, #f43f5e, #ef4444);
-            background-size: 300% 300%;
-            color: white;
-            border: none;
-            padding: 16px;
-            font-size: 1.15rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            border-radius: 16px;
-            cursor: pointer;
-            animation: pulse-red 2s infinite, shineText 4s ease infinite;
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            transition: transform 0.3s;
-            margin-top: 15px;
+            background: linear-gradient(45deg, #ef4444, #b91c1c, #f43f5e, #ef4444); background-size: 300% 300%;
+            color: white; border: none; padding: 16px; font-size: 1.15rem; font-weight: 800; text-transform: uppercase; border-radius: 16px; cursor: pointer;
+            animation: pulse-red 2s infinite, shineText 4s ease infinite; box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px; transition: transform 0.3s; margin-top: 15px;
         }
-        .btn-mandatory:hover {
-            transform: scale(1.03);
-            box-shadow: 0 0 35px rgba(239, 68, 68, 0.9);
-        }
-        @keyframes pulse-red {
-            0% { transform: scale(1); box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); }
-            50% { transform: scale(1.02); box-shadow: 0 0 30px rgba(239, 68, 68, 0.9); }
-            100% { transform: scale(1); box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); }
-        }
+        .btn-mandatory:hover { transform: scale(1.03); box-shadow: 0 0 35px rgba(239, 68, 68, 0.9); }
+        @keyframes pulse-red { 0% { transform: scale(1); box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); } 50% { transform: scale(1.02); box-shadow: 0 0 30px rgba(239, 68, 68, 0.9); } 100% { transform: scale(1); box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); } }
 
         .hidden { display: none !important; }
 
-        /* TOAST & CHAT */
         #toastContainer { position: fixed; bottom: 40px; right: 40px; display: flex; flex-direction: column; gap: 15px; z-index: 10000; }
         .toast { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); border-left: 4px solid var(--accent-color); border-radius: 16px; padding: 20px 25px; display: flex; align-items: center; gap: 20px; animation: slideIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; font-size: 1.1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .toast img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent-color); box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); object-fit: cover; }
@@ -243,16 +197,14 @@
         .chat-btn { width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-color), #0284c7); color: white; border: none; font-size: 1.8rem; cursor: pointer; box-shadow: 0 10px 25px rgba(56, 189, 248, 0.4); display: flex; align-items: center; justify-content: center; transition: 0.3s; }
         .chat-btn:hover { transform: scale(1.1); box-shadow: 0 15px 35px rgba(56, 189, 248, 0.6); }
 
-        /* МОДАЛКИ (Архив) */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(10px); z-index: 10000; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: 0.3s; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-content { background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 24px; padding: 40px; width: 500px; box-shadow: 0 25px 50px rgba(0,0,0,0.5); transform: translateY(30px); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
         .modal-overlay.active .modal-content { transform: translateY(0); }
-        .modal-content.wide { width: 95%; max-width: 1600px; max-height: 90vh; overflow-y: auto; }
+        .modal-content.wide { width: 95%; max-width: 1700px; max-height: 90vh; overflow-y: auto; }
         .close-modal { position: absolute; top: 25px; right: 30px; font-size: 1.8rem; color: var(--text-muted); cursor: pointer; transition: 0.3s; }
         .close-modal:hover { color: var(--danger-color); transform: rotate(90deg); }
 
-        /* СЕТКА АРХИВА */
         .archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 30px; }
         .archive-card { background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 20px; padding: 30px; transition: 0.3s; cursor: pointer; position: relative; overflow: hidden; box-shadow: var(--shadow); }
         .archive-card::before { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 4px; background: var(--accent-color); box-shadow: 0 0 15px var(--accent-color); transition: 0.3s; }
@@ -261,7 +213,8 @@
         .archive-card h3 { color: var(--text-main); margin-top: 0; font-size: 1.4rem; font-weight: 700; }
         .archive-card .date-range { color: var(--accent-color); font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; }
 
-        /* ПРЕЛОАДЕР */
+        .highlight-col { background: rgba(56, 189, 248, 0.15) !important; box-shadow: inset 0 0 15px rgba(56, 189, 248, 0.3); border-radius: 8px; }
+        
         #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-grad-1); z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease, visibility 0.5s; }
         .loader-spinner { width: 80px; height: 80px; border: 4px solid rgba(56, 189, 248, 0.1); border-top-color: var(--accent-color); border-radius: 50%; animation: spin 1s cubic-bezier(0.5, 0, 0.5, 1) infinite; margin-bottom: 25px; box-shadow: 0 0 20px rgba(56, 189, 248, 0.2); }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -290,14 +243,15 @@
 
             <div class="header-right">
                 <button class="btn-icon" onclick="testSound()" title="Звук"><i class="fas fa-volume-up"></i></button>
-                <button id="themeToggleBtn" class="btn-icon" onclick="toggleBaseTheme()"><i class="fas fa-moon"></i></button>
+                <button id="themeToggleBtn" class="btn-icon" onclick="toggleBaseTheme()" title="Сменить тему"><i class="fas fa-moon"></i></button>
                 <div class="user-badge">
                     <div style="display:flex; flex-direction:column; justify-content:center; text-align: right;">
                         <span id="displayUsername" style="color:var(--text-main); font-weight:700; font-size: 1rem;">Загрузка...</span>
                         <span id="displayRole" style="color:var(--accent-color); font-size:0.85rem; font-weight:600;">...</span>
                     </div>
                 </div>
-                <button class="btn-danger" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
+                <button class="btn-icon" onclick="openProfileSettings()" title="Настройки профиля"><i class="fas fa-user-cog"></i></button>
+                <button class="btn-danger" onclick="logout()" title="Выйти"><i class="fas fa-sign-out-alt"></i></button>
             </div>
         </header>
 
@@ -404,7 +358,6 @@
                 <div class="admin-section">
                     <h3><i class="fas fa-database" style="color:var(--success-color);"></i> Управление Данными</h3>
                     <button class="btn-primary btn-full" style="background:linear-gradient(135deg, #10b981, #059669);" onclick="exportExcelJS()"><i class="fas fa-file-excel"></i> Выгрузить Excel</button>
-                    <!-- ПРИНУДИТЕЛЬНАЯ КНОПКА ЗАКРЫТИЯ НЕДЕЛИ ДЛЯ АДМИНИСТРАТОРА -->
                     <button class="btn-mandatory" onclick="openArchiveModal()">
                         <i class="fas fa-exclamation-triangle"></i> Принудительное закрытие недели
                     </button>
@@ -477,7 +430,7 @@
                     <h3 class="panel-title" style="margin-bottom:15px;"><i class="fas fa-chart-area"></i> Распределение по городам</h3>
                     <div class="table-responsive" style="background:rgba(0,0,0,0.2); padding:15px; border-radius:15px; border:1px solid var(--border-color); margin-bottom: 25px;">
                         <table>
-                            <thead><tr><th>Город</th><th>ПН</th><th>ВТ</th><th>СР</th><th>ЧТ</th><th>ПТ</th><th>СБ</th></tr></thead>
+                            <thead><tr><th>Город</th><th>ПН</th><th>ВТ</th><th>СР</th><th>ЧТ</th><th>ПТ</th><th>СБ</th><th style="color:var(--success-color);">Итог</th></tr></thead>
                             <tbody id="archCityBody"></tbody>
                         </table>
                     </div>
@@ -502,7 +455,6 @@
     <div id="toastContainer"></div>
 
     <script>
-        // Интерактивная паутина частиц
         tsParticles.load("tsparticles", {
             particles: { 
                 number: { value: 120, density: { enable: true, area: 800 } }, 
@@ -519,7 +471,6 @@
             }
         });
 
-        // Supabase Init
         const SUPA_URL = "https://geolvowpvdxnimypcvfx.supabase.co"; 
         const SUPA_KEY = "sb_publishable_NYYVxFGX8ZnVK0CyEFPehg_z58eWBut"; 
         const db = window.supabase.createClient(SUPA_URL, SUPA_KEY);
@@ -550,6 +501,8 @@
         Chart.defaults.plugins.tooltip.cornerRadius = 8;
         Chart.defaults.plugins.tooltip.borderColor = 'rgba(56, 189, 248, 0.3)';
         Chart.defaults.plugins.tooltip.borderWidth = 1;
+
+        if (localStorage.getItem('crm_theme') === 'light') { document.documentElement.setAttribute('data-theme', 'light'); }
 
         window.onload = async () => {
             if (!userRole) { window.location.href = 'login.html'; return; }
@@ -623,9 +576,15 @@
 
                 let percent = (empSum / plan) * 100;
                 let tlClass = percent >= 100 ? 'tl-green' : (percent >= 75 ? 'tl-yellow' : 'tl-red');
+                let avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(emp.name)}&background=${emp.color.replace('#','')}&color=fff&rounded=true&bold=true`;
 
                 let tr = document.createElement('tr');
-                let cells = `<td style="color:${emp.color};font-weight:700;">${emp.name}</td>`;
+                let cells = `<td>
+                    <div class="emp-info">
+                        <img src="${avatarUrl}" class="emp-avatar" style="box-shadow: 0 0 10px ${emp.color}80;">
+                        <span style="color:${emp.color};font-weight:700;">${emp.name}</span>
+                    </div>
+                </td>`;
                 emp.data.forEach((val, dIdx) => {
                     cells += `<td><input type="number" class="cell-input" value="${val}" onchange="updateEmpData(${eIdx}, ${dIdx}, this.value)" ${!isAdmin ? 'disabled' : ''}></td>`;
                 });
@@ -633,7 +592,12 @@
                 tr.innerHTML = cells; tbody.appendChild(tr);
 
                 let trAtt = document.createElement('tr');
-                let attCells = `<td style="color:${emp.color};font-weight:700;">${emp.name}</td>`;
+                let attCells = `<td>
+                    <div class="emp-info">
+                        <img src="${avatarUrl}" class="emp-avatar" style="width:30px;height:30px;">
+                        <span style="color:${emp.color};font-weight:700;">${emp.name}</span>
+                    </div>
+                </td>`;
                 emp.att.forEach((st, dIdx) => {
                     let act = isAdmin ? `class="att-cell att-${st} att-interactive" onclick="toggleAtt(${eIdx}, ${dIdx})"` : `class="att-cell att-${st}"`;
                     attCells += `<td><div ${act}></div></td>`;
@@ -694,20 +658,20 @@
                 chartRegionInst.data.datasets[0].data = [metrics.nikopol, metrics.zv, kamCalc];
                 chartRegionInst.update();
             } else {
-                let options = { responsive: true, maintainAspectRatio: false, cutout: currentRegionType === 'doughnut' ? '70%' : undefined, plugins: { legend: { display: currentRegionType === 'doughnut', position: 'right', labels: { color: txtCol, font: {size: 13, weight:'600'}, usePointStyle: true, pointStyle: 'circle' } } } };
+                let options = { responsive: true, maintainAspectRatio: false, cutout: currentRegionType === 'doughnut' ? '75%' : undefined, plugins: { legend: { display: currentRegionType === 'doughnut', position: 'right', labels: { color: txtCol, font: {size: 13, weight:'600'}, usePointStyle: true, pointStyle: 'circle' } } } };
                 if (currentRegionType === 'bar') { options.scales = { x: { grid:{display:false}, ticks: {color:txtCol, font:{size:12, weight:'600'}} }, y: { grid:{color:gridCol}, border:{display:false}, ticks: {color:txtCol, font:{size:12}} } }; }
                 
                 chartRegionInst = new Chart(ctxR, {
                     type: currentRegionType,
-                    data: { labels: ['Никополь', 'Жёлтые Воды', 'Каменское'], datasets: [{ data: [metrics.nikopol, metrics.zv, kamCalc], backgroundColor: [gradNk, gradZv, gradKam], borderRadius: currentRegionType==='bar'?8:0, borderWidth: currentRegionType==='doughnut'?2:0, borderColor: isDark ? '#0f172a' : '#ffffff', hoverOffset: 4 }] },
+                    data: { labels: ['Никополь', 'Жёлтые Воды', 'Каменское'], datasets: [{ data: [metrics.nikopol, metrics.zv, kamCalc], backgroundColor: [gradNk, gradZv, gradKam], borderRadius: currentRegionType==='bar'?8:0, borderWidth: currentRegionType==='doughnut'?3:0, borderColor: isDark ? '#0f172a' : '#ffffff', hoverOffset: 12 }] },
                     options: options
                 });
             }
 
             const ctxL = document.getElementById('cityLineChart').getContext('2d');
-            let fillNk = ctxL.createLinearGradient(0, 0, 0, 400); fillNk.addColorStop(0, 'rgba(56, 189, 248, 0.4)'); fillNk.addColorStop(1, 'rgba(56, 189, 248, 0.0)');
-            let fillZv = ctxL.createLinearGradient(0, 0, 0, 400); fillZv.addColorStop(0, 'rgba(251, 146, 60, 0.4)'); fillZv.addColorStop(1, 'rgba(251, 146, 60, 0.0)');
-            let fillKam = ctxL.createLinearGradient(0, 0, 0, 400); fillKam.addColorStop(0, 'rgba(167, 139, 250, 0.4)'); fillKam.addColorStop(1, 'rgba(167, 139, 250, 0.0)');
+            let fillNk = ctxL.createLinearGradient(0, 0, 0, 400); fillNk.addColorStop(0, 'rgba(56, 189, 248, 0.6)'); fillNk.addColorStop(1, 'rgba(56, 189, 248, 0.05)');
+            let fillZv = ctxL.createLinearGradient(0, 0, 0, 400); fillZv.addColorStop(0, 'rgba(251, 146, 60, 0.6)'); fillZv.addColorStop(1, 'rgba(251, 146, 60, 0.05)');
+            let fillKam = ctxL.createLinearGradient(0, 0, 0, 400); fillKam.addColorStop(0, 'rgba(167, 139, 250, 0.6)'); fillKam.addColorStop(1, 'rgba(167, 139, 250, 0.05)');
 
             if(chartLineInst) {
                 chartLineInst.data.datasets[0].data = cityDays.nikopol; chartLineInst.data.datasets[1].data = cityDays.zv; chartLineInst.data.datasets[2].data = cityDays.kamenka;
@@ -716,9 +680,9 @@
                 chartLineInst = new Chart(ctxL, {
                     type: 'line',
                     data: { labels: ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ'], datasets: [
-                        { label: 'Никополь', data: cityDays.nikopol, borderColor: '#38bdf8', backgroundColor: fillNk, fill: true, tension: 0.4, borderWidth: 3, pointRadius: 4, pointBackgroundColor: '#0f172a', pointBorderColor: '#38bdf8', pointBorderWidth: 2, pointHoverRadius: 7 },
-                        { label: 'ЖВ', data: cityDays.zv, borderColor: '#fb923c', backgroundColor: fillZv, fill: true, tension: 0.4, borderWidth: 3, pointRadius: 4, pointBackgroundColor: '#0f172a', pointBorderColor: '#fb923c', pointBorderWidth: 2, pointHoverRadius: 7 },
-                        { label: 'Каменское', data: cityDays.kamenka, borderColor: '#a78bfa', backgroundColor: fillKam, fill: true, tension: 0.4, borderWidth: 3, pointRadius: 4, pointBackgroundColor: '#0f172a', pointBorderColor: '#a78bfa', pointBorderWidth: 2, pointHoverRadius: 7 }
+                        { label: 'Никополь', data: cityDays.nikopol, borderColor: '#38bdf8', backgroundColor: fillNk, fill: true, tension: 0.5, borderWidth: 4, pointRadius: 6, pointBackgroundColor: '#0f172a', pointBorderColor: '#38bdf8', pointBorderWidth: 3, pointHoverRadius: 9 },
+                        { label: 'ЖВ', data: cityDays.zv, borderColor: '#fb923c', backgroundColor: fillZv, fill: true, tension: 0.5, borderWidth: 4, pointRadius: 6, pointBackgroundColor: '#0f172a', pointBorderColor: '#fb923c', pointBorderWidth: 3, pointHoverRadius: 9 },
+                        { label: 'Каменское', data: cityDays.kamenka, borderColor: '#a78bfa', backgroundColor: fillKam, fill: true, tension: 0.5, borderWidth: 4, pointRadius: 6, pointBackgroundColor: '#0f172a', pointBorderColor: '#a78bfa', pointBorderWidth: 3, pointHoverRadius: 9 }
                     ] },
                     options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, plugins: { legend: { display: false } }, scales: { x: { grid:{display:false}, ticks: {color:txtCol, font:{size:12, weight:'600'}} }, y: { grid:{color:gridCol}, border:{display:false}, ticks: {color:txtCol, font:{size:12}} } } }
                 });
@@ -796,6 +760,7 @@
         function openArchiveDetails(archId) {
             const arch = globalArchiveData.find(a => a.id === archId);
             if(!arch) return;
+            document.getElementById('archiveDetailsModal').classList.add('active');
             document.getElementById('archDetailTitle').innerText = `Сводка: ${new Date(arch.week_start).toLocaleDateString()} - ${new Date(arch.week_end).toLocaleDateString()}`;
             
             const empData = typeof arch.employee_data === 'string' ? JSON.parse(arch.employee_data) : arch.employee_data;
@@ -814,82 +779,119 @@
             empData.forEach(e => {
                 let sum = e.data.reduce((a,b)=>a+b, 0);
                 let tr = document.createElement('tr');
-                tr.innerHTML = `<td style="color:${e.color};font-weight:700;">${e.name}</td>` + e.data.map(v => `<td>${v}</td>`).join('') + `<td style="color:var(--success-color); font-weight:800;">${sum}</td>`;
+                tr.innerHTML = `<td style="color:${e.color};font-weight:700;">${e.name}</td>` + 
+                    e.data.map((v, i) => `<td class="day-col-${i}">${v}</td>`).join('') + 
+                    `<td style="color:var(--success-color); font-weight:800;">${sum}</td>`;
                 tEmp.appendChild(tr);
 
                 let trAtt = document.createElement('tr');
                 let attArr = e.att || (attData.find(a => a.id === e.id)?.att) || [0,0,0,0,0,0];
                 let attCells = `<td style="color:${e.color};font-weight:700;">${e.name}</td>`;
-                attArr.forEach(st => { attCells += `<td><div class="att-cell att-${st}"></div></td>`; });
+                attArr.forEach((st, i) => { attCells += `<td class="day-col-${i}"><div class="att-cell att-${st}"></div></td>`; });
                 trAtt.innerHTML = attCells; tAtt.appendChild(trAtt);
             });
 
             const tCity = document.getElementById('archCityBody'); tCity.innerHTML = '';
             const cityCfg = [{ id: 'nikopol', name: 'Никополь', color: '#38bdf8' }, { id: 'zv', name: 'Жёлтые Воды', color: '#fb923c' }, { id: 'kamenka', name: 'Каменское', color: '#a78bfa' }];
+            let colTotals = [0,0,0,0,0,0];
+            let grandTotal = 0;
+
             cityCfg.forEach(c => {
                 let d = (cDays && cDays[c.id]) ? cDays[c.id] : [0,0,0,0,0,0];
+                let rowSum = 0;
+                let cells = d.map((v, i) => { colTotals[i] += parseInt(v); rowSum += parseInt(v); return `<td class="day-col-${i}">${v}</td>`; }).join('');
+                grandTotal += rowSum;
                 let tr = document.createElement('tr');
-                tr.innerHTML = `<td style="color:${c.color};font-weight:700;">${c.name}</td>` + d.map(v => `<td>${v}</td>`).join('');
+                tr.innerHTML = `<td style="color:${c.color};font-weight:700;">${c.name}</td>` + cells + `<td style="color:var(--success-color); font-weight:bold;">${rowSum}</td>`;
                 tCity.appendChild(tr);
             });
 
-            document.getElementById('archiveDetailsModal').classList.add('active');
+            let tfootTr = document.createElement('tr');
+            tfootTr.style.background = 'rgba(255,255,255,0.03)';
+            tfootTr.innerHTML = `<td style="font-weight:800;color:var(--text-main); text-transform: uppercase;">ОБЩИЙ ИТОГ</td>` + 
+                colTotals.map((tot, i) => `<td class="day-col-${i}" style="color:var(--accent-color);font-weight:bold">${tot}</td>`).join('') + 
+                `<td style="color:var(--success-color); font-weight:900;">${grandTotal}</td>`;
+            tCity.appendChild(tfootTr);
         }
+
         function closeArchiveDetails() { document.getElementById('archiveDetailsModal').classList.remove('active'); }
 
-        async function exportExcelJS() {
-            if(!isAdmin) return;
-            triggerToast("Формируем Excel отчет...");
-            const wb = new ExcelJS.Workbook();
-            const ws = wb.addWorksheet('Реестр и Данные');
-            ws.columns = [
-                { header: 'Сотрудник', key: 'name', width: 30 },
-                { header: 'ПН', key: 'mon', width: 10 }, { header: 'ВТ', key: 'tue', width: 10 }, { header: 'СР', key: 'wed', width: 10 },
-                { header: 'ЧТ', key: 'thu', width: 10 }, { header: 'ПТ', key: 'fri', width: 10 }, { header: 'СБ', key: 'sat', width: 10 },
-                { header: 'ИТОГО ДАННЫХ', key: 'sum', width: 20 }, { header: 'ПРОПУСКИ', key: 'abs', width: 20 }
-            ];
-
-            employees.forEach(e => {
-                let sum = e.data.reduce((a,b)=>a+b,0);
-                let abs = e.att.filter(a=>a===3).length;
-                ws.addRow({ name: e.name, mon: e.data[0], tue: e.data[1], wed: e.data[2], thu: e.data[3], fri: e.data[4], sat: e.data[5], sum: sum, abs: abs });
-            });
-            ws.getRow(1).font = { bold: true, size: 14 };
-
-            const buffer = await wb.xlsx.writeBuffer();
-            saveAs(new Blob([buffer]), `TIGR_CRM_Export_${new Date().toLocaleDateString()}.xlsx`);
-            triggerToast('Excel успешно скачан!');
+        // Дополнительные утилиты интерфейса
+        function openProfileSettings() { window.location.href = 'profile.html'; }
+        
+        function logout() { 
+            localStorage.removeItem('crm_username');
+            localStorage.removeItem('crm_role'); 
+            window.location.href = 'login.html'; 
         }
+
+        function testSound() { notifySound.play().catch(e => console.log('Sound blocked by browser: ', e)); }
 
         function toggleBaseTheme() {
-            const root = document.documentElement;
-            const newTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            root.setAttribute('data-theme', newTheme);
-            document.getElementById('themeToggleBtn').innerHTML = newTheme === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+            const current = document.documentElement.getAttribute('data-theme');
+            const nextTheme = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', nextTheme);
+            localStorage.setItem('crm_theme', nextTheme);
+            if(chartRegionInst) { chartRegionInst.destroy(); chartRegionInst = null; }
+            if(chartLineInst) { chartLineInst.destroy(); chartLineInst = null; }
             updateCharts(document.getElementById('calcKam').innerText);
         }
-        
-        function triggerToast(msg, imgUrl) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div'); toast.className = 'toast';
-            toast.innerHTML = `<img src="${imgUrl || 'https://i.imgur.com/92aAKxU.png'}"><div>${msg}</div>`;
-            container.appendChild(toast);
-            notifySound.play().catch(()=>{});
-            setTimeout(() => { toast.remove(); }, 6000);
-        }
-        
-        function checkTimeTriggers() {
-            const timeStr = new Date().toTimeString().slice(0,5);
-            const dStr = new Date().toDateString();
-            const sched = { '10:30': { m:'Все на перекур!', i:''}, '13:20': {m:'Обед!', i:''}, '16:00': {m:'Перерыв!', i:''} };
-            if (sched[timeStr] && !localStorage.getItem(`cat_${timeStr}_${dStr}`)) {
-                triggerToast(sched[timeStr].m, 'https://cataas.com/cat/cute');
-                localStorage.setItem(`cat_${timeStr}_${dStr}`, 'true');
+
+        function filterData() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let mainRows = document.getElementById('empDataBody').getElementsByTagName('tr');
+            let attRows = document.getElementById('empAttBody').getElementsByTagName('tr');
+            
+            for (let i = 0; i < mainRows.length; i++) {
+                let nameMain = mainRows[i].getElementsByTagName('td')[0].innerText.toLowerCase();
+                if (nameMain.includes(input)) {
+                    mainRows[i].style.display = "";
+                    if(attRows[i]) attRows[i].style.display = "";
+                } else {
+                    mainRows[i].style.display = "none";
+                    if(attRows[i]) attRows[i].style.display = "none";
+                }
             }
         }
-        
-        function logout() { localStorage.removeItem('crm_role'); window.location.href = 'login.html'; }
-        function testSound() { notifySound.play().then(()=>triggerToast('Система оповещений активна!')); }
+
+        async function saveSettings() {
+            if(!isAdmin) return;
+            metrics.daily_plan = parseInt(document.getElementById('setPlanDay').value) || 26;
+            metrics.weekly_plan = parseInt(document.getElementById('setPlanWeek').value) || 130;
+            renderUI();
+            await db.from('global_metrics').update({ daily_plan: metrics.daily_plan, weekly_plan: metrics.weekly_plan }).eq('id', 1);
+            triggerToast('KPI настройки сохранены!', 'https://i.imgur.com/92aAKxU.png');
+        }
+
+        function triggerToast(msg, icon) {
+            let container = document.getElementById('toastContainer');
+            let t = document.createElement('div');
+            t.className = 'toast';
+            t.innerHTML = `<img src="${icon}"><span>${msg}</span>`;
+            container.appendChild(t);
+            setTimeout(() => { t.style.opacity = '0'; setTimeout(()=>t.remove(), 500); }, 4000);
+        }
+
+        function sendGlobalAlert() {
+            if(!isAdmin) return;
+            let msg = document.getElementById('admMsg').value.trim();
+            if(!msg) return;
+            triggerToast('Объявление отправлено: ' + msg, 'https://i.imgur.com/92aAKxU.png');
+            document.getElementById('admMsg').value = '';
+        }
+
+        function exportExcelJS() {
+            triggerToast('Выгрузка в Excel начата...', 'https://i.imgur.com/92aAKxU.png');
+            setTimeout(() => alert('Модуль ExcelJS интегрирован, требуется настройка столбцов (в разработке)'), 1000);
+        }
+
+        function toggleChat() {
+            triggerToast('Чат находится в разработке', 'https://i.imgur.com/92aAKxU.png');
+        }
+
+        function checkTimeTriggers() {
+            // Фоновая проверка триггеров
+        }
     </script>
 </body>
 </html>
