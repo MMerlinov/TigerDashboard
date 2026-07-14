@@ -51,7 +51,6 @@
         
         * { box-sizing: border-box; outline: none; }
         
-        /* Исправление проблемы 50% масштаба: компактный адаптивный корень */
         html { font-size: clamp(13px, 0.85vw, 15px); }
 
         body, html { 
@@ -80,7 +79,6 @@
 
         .animated-panel { position: relative; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
         
-        /* Оптимизированный контейнер с плотной раскладкой */
         .dashboard-container { padding: 20px 25px; position: relative; z-index: 2; max-width: 1800px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; min-height: 100vh; }
         
         .header { display: flex; align-items: center; justify-content: space-between; background: var(--panel-bg); padding: 14px 25px; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: var(--shadow); }
@@ -108,7 +106,6 @@
         .btn-danger { background: transparent; border: 1px solid var(--danger-color); color: var(--danger-color); padding: 8px 16px; border-radius: 12px; cursor: pointer; font-weight: 700; transition: 0.3s; font-size: 0.85rem; text-transform: uppercase; }
         .btn-danger:hover { background: var(--danger-color); color: white; box-shadow: 0 0 15px rgba(248, 113, 113, 0.4); }
 
-        /* Эластичная двухколоночная сетка */
         .content-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 20px; align-items: start; }
         @media (max-width: 1200px) { .content-grid { grid-template-columns: 1fr; } }
         
@@ -173,7 +170,7 @@
         .chart-toggle-group i { font-size: 0.9rem; color: var(--text-muted); cursor: pointer; transition: 0.3s; padding: 6px 10px; border-radius: 6px; }
         .chart-toggle-group i.active { color: white; background: var(--accent-color); box-shadow: 0 0 8px rgba(56, 189, 248, 0.5); }
 
-        /* СТИЛИ ВКЛАДКИ ИНСТРУМЕНТЫ (TOOLS) */
+        /* TOOLS CSS */
         .tools-header-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; justify-content: space-between; }
         .filter-chips { display: flex; gap: 8px; flex-wrap: wrap; }
         .chip { padding: 7px 14px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: var(--text-muted); cursor: pointer; font-size: 0.82rem; font-weight: 600; transition: 0.2s; }
@@ -237,7 +234,6 @@
         <h2 style="color:var(--text-main); font-weight: 900; letter-spacing: 3px; font-size: 1.5rem;">TIGER <span class="text-gradient">DASHBOARD</span></h2>
     </div>
 
-    <!-- Задняя интерактивная паутинка (tsParticles) -->
     <div id="tsparticles"></div>
 
     <div class="dashboard-container">
@@ -255,7 +251,7 @@
             </div>
 
             <div class="header-right">
-                <button class="btn-icon" onclick="testSound()" title="Звук"><i class="fas fa-volume-up"></i></button>
+                <button class="btn-icon" onclick="testSound()" title="Воспроизвести тестовый звук"><i class="fas fa-volume-up"></i></button>
                 <button id="themeToggleBtn" class="btn-icon" onclick="toggleBaseTheme()" title="Сменить тему"><i class="fas fa-moon"></i></button>
                 <div class="user-badge">
                     <div style="display:flex; flex-direction:column; justify-content:center; text-align: right;">
@@ -363,11 +359,30 @@
                     <div class="input-group"><label>План день:</label><input type="number" id="setPlanDay" onchange="saveSettings()"></div>
                     <div class="input-group"><label>План неделя:</label><input type="number" id="setPlanWeek" onchange="saveSettings()"></div>
                 </div>
+                
+                <div class="admin-section">
+                    <h3><i class="fas fa-volume-up" style="color:var(--accent-color);"></i> Звук уведомлений</h3>
+                    <div class="input-group">
+                        <label>Выберите звуковой сигнал</label>
+                        <div style="display: flex; gap: 8px;">
+                            <select id="soundSelect" onchange="saveSoundPref()" style="flex: 1; padding: 10px; border-radius: 8px;">
+                                <option value="https://actions.google.com/sounds/v1/alarms/beep_short.ogg">Стандартный (Beep)</option>
+                                <option value="https://actions.google.com/sounds/v1/water/droplet_1.ogg">Капля воды</option>
+                                <option value="https://actions.google.com/sounds/v1/science_fiction/sci_fi_door_open.ogg">Сай-Фай дверь</option>
+                                <option value="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg">Цифровой будильник</option>
+                                <option value="none">Без звука</option>
+                            </select>
+                            <button class="btn-primary" onclick="testSound()" style="padding: 10px; border-radius: 8px;" title="Прослушать"><i class="fas fa-play"></i></button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="admin-section">
                     <h3><i class="fas fa-broadcast-tower" style="color:var(--warning-color);"></i> Объявление</h3>
                     <div class="input-group"><textarea id="admMsg" rows="2" placeholder="Текст сообщения..."></textarea></div>
                     <button class="btn-primary btn-full" onclick="sendGlobalAlert()"><i class="fas fa-paper-plane"></i> Отправить всем</button>
                 </div>
+                
                 <div class="admin-section">
                     <h3><i class="fas fa-database" style="color:var(--success-color);"></i> Управление Данными</h3>
                     <button class="btn-primary btn-full" style="background:linear-gradient(135deg, #10b981, #059669);" onclick="exportExcelJS()"><i class="fas fa-file-excel"></i> Выгрузить Excel</button>
@@ -378,7 +393,7 @@
             </div>
         </div>
 
-        <!-- НОВАЯ ВКЛАДКА: ИНСТРУМЕНТЫ -->
+        <!-- ВКЛАДКА: ИНСТРУМЕНТЫ -->
         <div id="viewTools" class="hidden">
             <div class="panel animated-panel" style="min-height: 70vh;">
                 <div class="tools-header-actions">
@@ -393,7 +408,6 @@
                     </div>
                 </div>
 
-                <!-- Фильтры по категориям -->
                 <div class="filter-chips" style="margin-bottom: 20px;">
                     <div class="chip active" onclick="filterToolsCategory('all', this)">Все</div>
                     <div class="chip" onclick="filterToolsCategory('Промпты', this)">Промпты</div>
@@ -402,7 +416,6 @@
                     <div class="chip" onclick="filterToolsCategory('Ресурсы', this)">Ресурсы</div>
                 </div>
 
-                <!-- Сетка карточек -->
                 <div id="toolsGrid" class="tools-grid">
                     <!-- Рендеринг JS -->
                 </div>
@@ -421,7 +434,7 @@
         </div>
     </div>
 
-    <!-- МОДАЛКА: СОЗДАНИЕ/РЕДАКТИРОВАНИЕ ИНСТРУМЕНТА (АДМИН) -->
+    <!-- МОДАЛКИ (Инструменты) -->
     <div id="toolModal" class="modal-overlay">
         <div class="modal-content animated-panel">
             <i class="fas fa-times close-modal" onclick="closeToolModal()"></i>
@@ -479,11 +492,11 @@
         </div>
     </div>
 
-    <!-- МОДАЛКА: СОХРАНЕНИЕ НЕДЕЛИ -->
+    <!-- МОДАЛКА: ЗАКРЫТИЕ НЕДЕЛИ -->
     <div id="saveWeekModal" class="modal-overlay">
         <div class="modal-content animated-panel">
             <h2 style="margin-top:0; color:var(--danger-color); font-weight:800; font-size:1.3rem;"><i class="fas fa-exclamation-triangle"></i> Закрытие Недели</h2>
-            <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.4;">Данные будут перенесены в архив, а текущие таблицы обнулятся.</p>
+            <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.4;">Данные будут сохранены в архивный журнал.</p>
             
             <div style="display:flex; gap:10px; margin-top:15px;">
                 <div style="flex:1;">
@@ -500,7 +513,7 @@
 
             <div style="display:flex; gap:10px; margin-top:20px;">
                 <button class="btn-primary" style="flex:1; background:transparent; border:1px solid var(--border-color); color:var(--text-main);" onclick="closeArchiveModal()">Отмена</button>
-                <button class="btn-danger" style="flex:1; background:linear-gradient(135deg, #ef4444, #b91c1c); color:white; border:none;" onclick="processArchiveWeek()"><i class="fas fa-check"></i> Подтвердить</button>
+                <button class="btn-danger" style="flex:1; background:linear-gradient(135deg, #ef4444, #b91c1c); color:white; border:none;" onclick="processArchiveWeek()"><i class="fas fa-check"></i> Сохранить в Архив</button>
             </div>
         </div>
     </div>
@@ -544,7 +557,7 @@
     <div id="toastContainer"></div>
 
     <script>
-        // Инициализация заднего фона «Паутинка из точек и нитей»
+        // Анимация фона
         tsParticles.load("tsparticles", {
             particles: { 
                 number: { value: 75, density: { enable: true, area: 900 } }, 
@@ -561,7 +574,7 @@
             }
         });
 
-        // Конфигурация Supabase
+        // Конфигурация БД
         const SUPA_URL = "https://geolvowpvdxnimypcvfx.supabase.co"; 
         const SUPA_KEY = "sb_publishable_NYYVxFGX8ZnVK0CyEFPehg_z58eWBut"; 
         const db = window.supabase.createClient(SUPA_URL, SUPA_KEY);
@@ -576,11 +589,16 @@
         
         let toolsList = [];
         let activeToolCategory = 'all';
+        let archivesList = [];
 
         let chartRegionInst = null;
         let currentRegionType = 'doughnut';
         let chartLineInst = null;
         
+        // Переменные для звука
+        let currentSoundUrl = localStorage.getItem('crm_alert_sound') || 'https://actions.google.com/sounds/v1/alarms/beep_short.ogg';
+        let alertChannel;
+
         const dbDays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
         const attDays = ['att_mon', 'att_tue', 'att_wed', 'att_thu', 'att_fri', 'att_sat'];
 
@@ -597,6 +615,8 @@
             if (isAdmin) {
                 document.getElementById('adminPanel').classList.remove('hidden');
                 document.getElementById('addToolBtn').classList.remove('hidden');
+                const sSelect = document.getElementById('soundSelect');
+                if(sSelect) sSelect.value = currentSoundUrl;
             }
 
             await fetchData();
@@ -608,6 +628,55 @@
                 setTimeout(() => document.getElementById('loader').style.visibility = 'hidden', 400);
             }, 600);
         };
+
+        // --- ЗВУКИ И УВЕДОМЛЕНИЯ ---
+        function saveSoundPref() {
+            currentSoundUrl = document.getElementById('soundSelect').value;
+            localStorage.setItem('crm_alert_sound', currentSoundUrl);
+            testSound();
+        }
+
+        function testSound() {
+            if (currentSoundUrl === 'none') return;
+            try {
+                const audio = new Audio(currentSoundUrl);
+                audio.volume = 0.7;
+                audio.play();
+            } catch(e) {
+                console.warn('Автовоспроизведение заблокировано', e);
+            }
+        }
+
+        function triggerToast(msg, img = 'https://i.imgur.com/92aAKxU.png', playSound = true) {
+            if (playSound) testSound();
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<img src="${img}"><span>${msg}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        function sendGlobalAlert() {
+            if(!isAdmin) return;
+            const msgInput = document.getElementById('admMsg');
+            const msg = msgInput.value.trim();
+            if(!msg) { triggerToast('Введите текст!', null, false); return; }
+
+            // Отправляем broadcast событие через Supabase
+            if (alertChannel) {
+                alertChannel.send({
+                    type: 'broadcast',
+                    event: 'new_alert',
+                    payload: { message: `🔔 Объявление от Админа: ${msg}` }
+                }).then(() => {
+                    triggerToast('Отправлено успешно!', null, false);
+                    msgInput.value = '';
+                });
+            } else {
+                triggerToast('Ошибка канала связи', null, false);
+            }
+        }
 
         function setupRealtimeSubscriptions() {
             db.channel('public:employees').on('postgres_changes', { event: '*', schema: 'public', table: 'employees' }, () => {
@@ -621,14 +690,23 @@
             db.channel('public:system_tools').on('postgres_changes', { event: '*', schema: 'public', table: 'system_tools' }, () => {
                 fetchTools();
             }).subscribe();
+
+            // Канал для глобальных уведомлений (Broadcast)
+            alertChannel = db.channel('global_alerts');
+            alertChannel.on('broadcast', { event: 'new_alert' }, (payload) => {
+                triggerToast(payload.payload.message, 'https://i.imgur.com/92aAKxU.png', true);
+            }).subscribe();
         }
 
+        // --- ДАШБОРД (ГЛАВНАЯ) ---
         async function fetchData() {
             let { data: dbMetrics } = await db.from('global_metrics').select('*').eq('id', 1).single();
             if (dbMetrics) {
                 metrics = dbMetrics;
-                document.getElementById('setPlanDay').value = metrics.daily_plan || 26;
-                document.getElementById('setPlanWeek').value = metrics.weekly_plan || 130;
+                const spd = document.getElementById('setPlanDay');
+                const spw = document.getElementById('setPlanWeek');
+                if(spd) spd.value = metrics.daily_plan || 26;
+                if(spw) spw.value = metrics.weekly_plan || 130;
                 document.getElementById('inpTotal').value = metrics.total || 0;
                 document.getElementById('inpNk').value = metrics.nikopol || 0;
                 document.getElementById('inpZv').value = metrics.zv || 0;
@@ -664,7 +742,12 @@
             let globSum = 0; let globAbsences = 0; let daysSum = [0,0,0,0,0,0];
             const plan = metrics.weekly_plan || 130;
 
+            // Simple search filter logic
+            const searchVal = (document.getElementById('searchInput')?.value || '').toLowerCase();
+
             employees.forEach((emp, eIdx) => {
+                if (searchVal && !emp.name.toLowerCase().includes(searchVal)) return;
+
                 let empSum = emp.data.reduce((a,b)=>a+b, 0);
                 let absences = emp.att.filter(a => a === 3).length;
                 globSum += empSum; globAbsences += absences;
@@ -712,6 +795,8 @@
             updateCharts(kamCalc);
         }
 
+        function filterData() { renderUI(); }
+
         function renderCityDays() {
             let tbody = document.getElementById('cityDaysBody'); tbody.innerHTML = '';
             const cfg = [
@@ -732,13 +817,20 @@
         async function saveMetrics() { if(!isAdmin) return; metrics.total = parseInt(document.getElementById('inpTotal').value)||0; metrics.nikopol = parseInt(document.getElementById('inpNk').value)||0; metrics.zv = parseInt(document.getElementById('inpZv').value)||0; renderUI(); await db.from('global_metrics').update({ total: metrics.total, nikopol: metrics.nikopol, zv: metrics.zv }).eq('id', 1); }
         async function updateCityDay(city, dIdx, val) { if(!isAdmin) return; cityDays[city][dIdx] = parseInt(val)||0; renderUI(); await db.from('global_metrics').update({ city_days: cityDays }).eq('id', 1); }
 
-        /* ИНСТРУМЕНТЫ (TOOLS) - ЛОГИКА */
+        function saveSettings() {
+            if(!isAdmin) return;
+            // Placeholder: add your save settings logic if required.
+        }
+
+        function exportExcelJS() {
+            triggerToast('Функция экспорта инициализирована', null, false);
+            // Место для вашей логики ExcelJS
+        }
+
+        /* --- ИНСТРУМЕНТЫ (TOOLS) --- */
         async function fetchTools() {
             let { data, error } = await db.from('system_tools').select('*').order('created_at', { ascending: false });
-            if (!error && data) {
-                toolsList = data;
-                renderTools();
-            }
+            if (!error && data) { toolsList = data; renderTools(); }
         }
 
         function filterToolsCategory(cat, el) {
@@ -762,18 +854,13 @@
             });
 
             if (filtered.length === 0) {
-                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 40px;">
-                    <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
-                    Инструменты не найдены
-                </div>`;
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 40px;">Нет инструментов</div>`;
                 return;
             }
 
             filtered.forEach(tool => {
                 const card = document.createElement('div');
                 card.className = 'tool-card';
-                
-                // Дефолтное изображение с адаптацией к проекту
                 let fallbackImg = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80';
                 let imgSrc = tool.image_url ? tool.image_url : fallbackImg;
                 if(imgSrc === 'image_963a6e.png') imgSrc = 'https://i.imgur.com/92aAKxU.png';
@@ -784,12 +871,11 @@
                     <div class="admin-controls-overlay">
                         <button class="btn-mini-admin" onclick="openEditToolModal(${tool.id})" title="Редактировать"><i class="fas fa-edit"></i></button>
                         <button class="btn-mini-admin delete" onclick="deleteTool(${tool.id})" title="Удалить"><i class="fas fa-trash"></i></button>
-                    </div>
-                ` : '';
+                    </div>` : '';
 
                 let actionBtn = tool.type === 'link' ? 
                     `<a href="${tool.content}" target="_blank" class="btn-primary" style="width:100%; justify-content:center; text-decoration:none;"><i class="fas fa-external-link-alt"></i> Перейти</a>` :
-                    `<button class="btn-primary" style="width:100%; justify-content:center;" onclick="copyPrompt(\`${escapeJsString(tool.content)}\`)"><i class="fas fa-copy"></i> Скопировать Промпт</button>`;
+                    `<button class="btn-primary" style="width:100%; justify-content:center;" onclick="copyPrompt(\`${escapeJsString(tool.content)}\`)"><i class="fas fa-copy"></i> Копировать</button>`;
 
                 card.innerHTML = `
                     ${adminBtns}
@@ -806,108 +892,177 @@
             });
         }
 
-        function escapeJsString(str) {
-            return str ? str.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$') : '';
-        }
-
-        function copyPrompt(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                triggerToast('Промпт успешно скопирован!', 'https://i.imgur.com/92aAKxU.png');
-            });
-        }
-
-        function toggleToolTypeFields() {
-            const type = document.getElementById('toolType').value;
-            const label = document.getElementById('toolContentLabel');
-            label.innerText = type === 'link' ? 'URL Сайта (Ссылка)' : 'Текст Промпта';
-        }
+        function escapeJsString(str) { return str ? str.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$') : ''; }
+        function copyPrompt(text) { navigator.clipboard.writeText(text).then(() => { triggerToast('Промпт скопирован!', null, false); }); }
+        function toggleToolTypeFields() { document.getElementById('toolContentLabel').innerText = document.getElementById('toolType').value === 'link' ? 'URL Сайта' : 'Текст Промпта'; }
 
         function openAddToolModal() {
-            document.getElementById('toolEditId').value = '';
-            document.getElementById('toolModalTitle').innerText = 'Добавить инструмент';
-            document.getElementById('toolTitle').value = '';
-            document.getElementById('toolCategory').value = 'Промпты';
-            document.getElementById('toolType').value = 'prompt';
-            document.getElementById('toolContent').value = '';
-            document.getElementById('toolDesc').value = '';
-            document.getElementById('toolImageUrl').value = '';
-            document.getElementById('toolTags').value = '';
-            toggleToolTypeFields();
+            document.getElementById('toolEditId').value = ''; document.getElementById('toolModalTitle').innerText = 'Добавить инструмент';
+            document.getElementById('toolTitle').value = ''; document.getElementById('toolCategory').value = 'Промпты';
+            document.getElementById('toolType').value = 'prompt'; document.getElementById('toolContent').value = '';
+            document.getElementById('toolDesc').value = ''; document.getElementById('toolImageUrl').value = '';
+            document.getElementById('toolTags').value = ''; toggleToolTypeFields();
             document.getElementById('toolModal').classList.add('active');
         }
 
         function openEditToolModal(id) {
-            const tool = toolsList.find(t => t.id === id);
-            if (!tool) return;
-            document.getElementById('toolEditId').value = tool.id;
-            document.getElementById('toolModalTitle').innerText = 'Редактировать инструмент';
-            document.getElementById('toolTitle').value = tool.title || '';
-            document.getElementById('toolCategory').value = tool.category || 'Промпты';
-            document.getElementById('toolType').value = tool.type || 'prompt';
-            document.getElementById('toolContent').value = tool.content || '';
-            document.getElementById('toolDesc').value = tool.description || '';
-            document.getElementById('toolImageUrl').value = tool.image_url || '';
-            document.getElementById('toolTags').value = tool.tags ? tool.tags.join(', ') : '';
-            toggleToolTypeFields();
+            const tool = toolsList.find(t => t.id === id); if (!tool) return;
+            document.getElementById('toolEditId').value = tool.id; document.getElementById('toolModalTitle').innerText = 'Редактировать инструмент';
+            document.getElementById('toolTitle').value = tool.title || ''; document.getElementById('toolCategory').value = tool.category || 'Промпты';
+            document.getElementById('toolType').value = tool.type || 'prompt'; document.getElementById('toolContent').value = tool.content || '';
+            document.getElementById('toolDesc').value = tool.description || ''; document.getElementById('toolImageUrl').value = tool.image_url || '';
+            document.getElementById('toolTags').value = tool.tags ? tool.tags.join(', ') : ''; toggleToolTypeFields();
             document.getElementById('toolModal').classList.add('active');
         }
 
-        function closeToolModal() {
-            document.getElementById('toolModal').classList.remove('active');
-        }
+        function closeToolModal() { document.getElementById('toolModal').classList.remove('active'); }
 
         async function saveTool() {
             if(!isAdmin) return;
             const id = document.getElementById('toolEditId').value;
-            const title = document.getElementById('toolTitle').value.trim();
-            const category = document.getElementById('toolCategory').value;
-            const type = document.getElementById('toolType').value;
-            const content = document.getElementById('toolContent').value.trim();
-            const description = document.getElementById('toolDesc').value.trim();
-            const image_url = document.getElementById('toolImageUrl').value.trim();
-            const tagsRaw = document.getElementById('toolTags').value;
-            const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
-
-            if (!title || !content) return alert('Заполните название и содержимое!');
-
-            const payload = { title, category, type, content, description, image_url, tags };
-
-            if (id) {
-                await db.from('system_tools').update(payload).eq('id', id);
-                triggerToast('Инструмент обновлен', 'https://i.imgur.com/92aAKxU.png');
-            } else {
-                await db.from('system_tools').insert([payload]);
-                triggerToast('Новый инструмент добавлен', 'https://i.imgur.com/92aAKxU.png');
-            }
-
-            closeToolModal();
-            fetchTools();
+            const payload = { 
+                title: document.getElementById('toolTitle').value.trim(), category: document.getElementById('toolCategory').value,
+                type: document.getElementById('toolType').value, content: document.getElementById('toolContent').value.trim(),
+                description: document.getElementById('toolDesc').value.trim(), image_url: document.getElementById('toolImageUrl').value.trim(),
+                tags: document.getElementById('toolTags').value ? document.getElementById('toolTags').value.split(',').map(t=>t.trim()).filter(Boolean) : []
+            };
+            if (!payload.title || !payload.content) return triggerToast('Заполните все поля!', null, false);
+            if (id) { await db.from('system_tools').update(payload).eq('id', id); triggerToast('Обновлено', null, false); } 
+            else { await db.from('system_tools').insert([payload]); triggerToast('Добавлено', null, false); }
+            closeToolModal(); fetchTools();
         }
 
         async function deleteTool(id) {
             if(!isAdmin) return;
-            if(confirm('Удалить данный инструмент?')) {
-                await db.from('system_tools').delete().eq('id', id);
-                triggerToast('Инструмент удален', 'https://i.imgur.com/92aAKxU.png');
-                fetchTools();
+            if(confirm('Удалить данный инструмент?')) { await db.from('system_tools').delete().eq('id', id); triggerToast('Удалено', null, false); fetchTools(); }
+        }
+
+        /* --- АРХИВ НЕДЕЛЬ --- */
+        async function loadArchives() {
+            const container = document.getElementById('archiveContainer');
+            container.innerHTML = '<div style="color:var(--text-muted); text-align:center; grid-column: 1/-1; padding: 40px;"><i class="fas fa-spinner fa-spin" style="font-size:2rem; margin-bottom:10px;"></i><br>Синхронизация...</div>';
+
+            try {
+                let { data, error } = await db.from('weekly_archives').select('*').order('week_end', { ascending: false });
+                if (error) throw error;
+                archivesList = data || [];
+
+                if (archivesList.length === 0) {
+                    container.innerHTML = '<div style="color:var(--text-muted); text-align:center; grid-column: 1/-1; padding: 40px;">Архив пуст</div>';
+                    return;
+                }
+
+                container.innerHTML = '';
+                archivesList.forEach(arch => {
+                    let m = {}; try { m = typeof arch.global_metrics === 'string' ? JSON.parse(arch.global_metrics) : (arch.global_metrics || {}); } catch(e){}
+                    
+                    let card = document.createElement('div'); card.className = 'tool-card';
+                    card.innerHTML = `
+                        <div class="tool-card-body" style="text-align: center; justify-content: center; align-items: center; padding: 30px 15px;">
+                            <i class="fas fa-folder-open" style="font-size: 2.5rem; color: var(--accent-color); margin-bottom: 15px;"></i>
+                            <h3 style="margin: 0 0 10px 0; color: var(--text-main); font-weight: 800; font-size: 1.1rem;">
+                                ${formatDate(arch.week_start)} — ${formatDate(arch.week_end)}
+                            </h3>
+                            <div style="background:var(--bg-secondary, rgba(0,0,0,0.2)); padding:8px; border-radius:8px; width:100%; margin-bottom:15px; font-size:0.9rem;">
+                                Общее: <b>${m.total || 0}</b> | НК: <b>${m.nikopol || 0}</b> | ЖВ: <b>${m.zv || 0}</b>
+                            </div>
+                            <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="openArchiveDetails('${arch.id}')"><i class="fas fa-eye"></i> Подробнее</button>
+                        </div>`;
+                    container.appendChild(card);
+                });
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = '<div style="color:var(--danger-color); text-align:center; grid-column: 1/-1; padding: 40px;">Ошибка загрузки архивов</div>';
             }
         }
 
-        /* НАВИГАЦИЯ */
+        function formatDate(ds) { if (!ds) return ''; const d = new Date(ds); return isNaN(d) ? 'Дата' : d.toLocaleDateString('ru-RU', { day:'2-digit', month:'2-digit', year:'numeric' }); }
+
+        function openArchiveDetails(id) {
+            const arch = archivesList.find(a => a.id == id); if (!arch) return;
+            let m = {}, emps = [], cities = {};
+            try { m = typeof arch.global_metrics === 'string' ? JSON.parse(arch.global_metrics) : (arch.global_metrics || {}); } catch(e) {}
+            try { emps = typeof arch.employee_data === 'string' ? JSON.parse(arch.employee_data) : (arch.employee_data || []); } catch(e) {}
+            try { cities = typeof arch.city_days === 'string' ? JSON.parse(arch.city_days) : (arch.city_days || {}); } catch(e) {}
+
+            document.getElementById('archDetailTitle').innerText = `Сводка за: ${formatDate(arch.week_start)} — ${formatDate(arch.week_end)}`;
+            document.getElementById('archKpiCount').innerText = emps.length; document.getElementById('archKpiTotal').innerText = m.total || 0;
+            document.getElementById('archKpiNk').innerText = m.nikopol || 0; document.getElementById('archKpiZv').innerText = m.zv || 0;
+
+            let empBody = document.getElementById('archEmpBody'); empBody.innerHTML = '';
+            emps.forEach(emp => {
+                let dataArr = emp.data || [0,0,0,0,0,0]; let sum = dataArr.reduce((a,b) => Number(a)+Number(b), 0);
+                empBody.innerHTML += `<tr><td style="font-weight:700; text-align:left;">${emp.name || 'Без имени'}</td>
+                    ${dataArr.map(v => `<td style="color:${v>0?'var(--text-main)':'var(--text-muted)'}">${v||'-'}</td>`).join('')}
+                    <td style="color:var(--success-color); font-weight:800;">${sum}</td></tr>`;
+            });
+
+            let cityBody = document.getElementById('archCityBody'); cityBody.innerHTML = '';
+            [{k:'nikopol', n:'Никополь', c:'#38bdf8'}, {k:'zv', n:'Жёлтые Воды', c:'#fb923c'}, {k:'kamenka', n:'Каменское', c:'#a78bfa'}].forEach(ci => {
+                let dataArr = cities[ci.k] || [0,0,0,0,0,0]; let sum = dataArr.reduce((a,b) => Number(a)+Number(b), 0);
+                cityBody.innerHTML += `<tr><td style="color:${ci.c}; font-weight:700; text-align:left;">${ci.n}</td>
+                    ${dataArr.map(v => `<td style="color:${v>0?'var(--text-main)':'var(--text-muted)'}">${v||'-'}</td>`).join('')}
+                    <td style="color:var(--success-color); font-weight:800;">${sum}</td></tr>`;
+            });
+            document.getElementById('archiveDetailsModal').classList.add('active');
+        }
+
+        function closeArchiveDetails() { document.getElementById('archiveDetailsModal').classList.remove('active'); }
+
+        function openArchiveModal() { 
+            if(!isAdmin) return triggerToast('Требуются права администратора!', null, true);
+            document.getElementById('saveWeekModal').classList.add('active'); 
+        }
+        
+        function closeArchiveModal() { 
+            document.getElementById('saveWeekModal').classList.remove('active'); 
+            const pin = document.getElementById('archPin'); if(pin) pin.value = '';
+        }
+
+        async function processArchiveWeek() {
+            const pin = document.getElementById('archPin').value;
+            if(pin !== '0402') { triggerToast('Неверный PIN-код!', null, true); return; }
+
+            const start = document.getElementById('archStart').value;
+            const end = document.getElementById('archEnd').value;
+            if(!start || !end) { triggerToast('Пожалуйста, выберите даты!', null, true); return; }
+
+            try {
+                const archPayload = {
+                    week_start: start,
+                    week_end: end,
+                    global_metrics: JSON.stringify(metrics),
+                    employee_data: JSON.stringify(employees),
+                    city_days: JSON.stringify(cityDays)
+                };
+
+                const { error } = await db.from('weekly_archives').insert([archPayload]);
+                if (error) throw error;
+
+                triggerToast('Архив успешно сохранен!', null, true);
+                closeArchiveModal();
+                
+                if (!document.getElementById('viewArchive').classList.contains('hidden')) {
+                    loadArchives();
+                }
+            } catch (err) {
+                console.error(err);
+                triggerToast('Ошибка сохранения: ' + err.message, null, true);
+            }
+        }
+
+        /* --- НАВИГАЦИЯ & ГРАФИКИ --- */
         function switchView(view, btn) {
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             if(btn) btn.classList.add('active');
             
-            document.getElementById('viewMain').classList.add('hidden');
-            document.getElementById('viewTools').classList.add('hidden');
-            document.getElementById('viewArchive').classList.add('hidden');
+            ['viewMain', 'viewTools', 'viewArchive'].forEach(v => document.getElementById(v).classList.add('hidden'));
+            document.getElementById('view' + view.charAt(0).toUpperCase() + view.slice(1)).classList.remove('hidden');
 
-            if(view === 'main') document.getElementById('viewMain').classList.remove('hidden');
-            else if(view === 'tools') { document.getElementById('viewTools').classList.remove('hidden'); fetchTools(); }
-            else if(view === 'archive') { document.getElementById('viewArchive').classList.remove('hidden'); loadArchives(); }
+            if(view === 'tools') fetchTools();
+            if(view === 'archive') loadArchives();
         }
 
-        /* ГРАФИКИ И УВЕДОМЛЕНИЯ */
         function setRegionChartType(type) {
             currentRegionType = type;
             document.getElementById('btnPie').classList.toggle('active', type === 'doughnut');
@@ -953,20 +1108,10 @@
             }
         }
 
-        function triggerToast(msg, img) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.innerHTML = `<img src="${img || 'https://i.imgur.com/92aAKxU.png'}"><span>${msg}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 4000);
-        }
-
         function openProfileSettings() { window.location.href = 'profile.html'; }
         function logout() { localStorage.clear(); window.location.href = 'login.html'; }
         function toggleBaseTheme() {
-            const current = document.documentElement.getAttribute('data-theme');
-            const next = current === 'light' ? 'dark' : 'light';
+            const next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', next);
             localStorage.setItem('crm_theme', next);
             updateCharts(document.getElementById('calcKam').innerText);
