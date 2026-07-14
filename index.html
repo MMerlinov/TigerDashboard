@@ -22,7 +22,7 @@
             --bg-grad-2: #0f172a; 
             --bg-grad-3: #0b0f19; 
             --bg-grad-4: #1e1b4b; 
-            --panel-bg: rgba(15, 23, 42, 0.65); 
+            --panel-bg: rgba(15, 23, 42, 0.75); 
             --text-main: #f8fafc; 
             --text-muted: #94a3b8; 
             --border-color: rgba(255, 255, 255, 0.08); 
@@ -39,7 +39,7 @@
         
         [data-theme="light"] { 
             --bg-grad-1: #f8fafc; --bg-grad-2: #f1f5f9; --bg-grad-3: #e2e8f0; --bg-grad-4: #cbd5e1; 
-            --panel-bg: rgba(255, 255, 255, 0.85); 
+            --panel-bg: rgba(255, 255, 255, 0.88); 
             --text-main: #0f172a; --text-muted: #475569; 
             --border-color: rgba(0, 0, 0, 0.08); 
             --input-bg: rgba(241, 245, 249, 0.8); 
@@ -50,7 +50,9 @@
         }
         
         * { box-sizing: border-box; outline: none; }
-        html { font-size: 18px; }
+        
+        /* Исправление проблемы 50% масштаба: компактный адаптивный корень */
+        html { font-size: clamp(13px, 0.85vw, 15px); }
 
         body, html { 
             margin: 0; padding: 0; 
@@ -60,12 +62,11 @@
             overflow-x: hidden; scroll-behavior: smooth; 
         }
         
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg-grad-1); }
         ::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 4px; }
         
-        #tsparticles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: linear-gradient(135deg, var(--bg-grad-1), var(--bg-grad-2), var(--bg-grad-3), var(--bg-grad-4)); background-size: 400% 400%; animation: gradientBG 20s ease infinite; transition: background 0.5s ease; }
-        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        #tsparticles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: auto; }
         
         .text-gradient {
             background: linear-gradient(to right, var(--accent-color), var(--kamenskoe-color), var(--success-color), var(--accent-color));
@@ -78,154 +79,165 @@
         @keyframes shineText { to { background-position: 300% center; } }
 
         .animated-panel { position: relative; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
-        .dashboard-container { padding: 40px 50px; position: relative; z-index: 2; max-width: 1900px; margin: 0 auto; display: flex; flex-direction: column; gap: 30px; min-height: 100vh; }
         
-        .header { display: flex; align-items: center; justify-content: space-between; background: var(--panel-bg); padding: 20px 40px; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: var(--shadow); }
-        .logo-area { display: flex; align-items: center; gap: 20px; }
-        .crm-logo { width: 60px; height: 60px; object-fit: contain; filter: drop-shadow(0 0 12px var(--accent-color)); transition: transform 0.3s; }
+        /* Оптимизированный контейнер с плотной раскладкой */
+        .dashboard-container { padding: 20px 25px; position: relative; z-index: 2; max-width: 1800px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; min-height: 100vh; }
+        
+        .header { display: flex; align-items: center; justify-content: space-between; background: var(--panel-bg); padding: 14px 25px; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: var(--shadow); }
+        .logo-area { display: flex; align-items: center; gap: 15px; }
+        .crm-logo { width: 42px; height: 42px; object-fit: contain; filter: drop-shadow(0 0 10px var(--accent-color)); transition: transform 0.3s; }
         .crm-logo:hover { transform: rotate(15deg) scale(1.1); }
-        .header h1 { font-weight: 900; font-size: 2.2rem; margin: 0; color: var(--text-main); letter-spacing: 2px; }
+        .header h1 { font-weight: 900; font-size: 1.6rem; margin: 0; color: var(--text-main); letter-spacing: 1.5px; }
         
-        .nav-tabs { display: flex; gap: 15px; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 15px; border: 1px solid var(--border-color); }
-        .nav-tab { background: transparent; color: var(--text-muted); border: none; padding: 12px 25px; font-weight: 700; border-radius: 12px; cursor: pointer; transition: 0.3s; font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-size: 1rem; }
-        .nav-tab.active { background: var(--accent-color); color: #fff; box-shadow: 0 0 15px rgba(56, 189, 248, 0.5); }
+        .nav-tabs { display: flex; gap: 8px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 12px; border: 1px solid var(--border-color); }
+        .nav-tab { background: transparent; color: var(--text-muted); border: none; padding: 9px 18px; font-weight: 700; border-radius: 9px; cursor: pointer; transition: 0.3s; font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; }
+        .nav-tab.active { background: var(--accent-color); color: #fff; box-shadow: 0 0 12px rgba(56, 189, 248, 0.4); }
         .nav-tab:hover:not(.active) { color: var(--text-main); background: rgba(255,255,255,0.05); }
 
-        .header-right { display: flex; align-items: center; gap: 20px; }
-        .user-badge { display: flex; align-items: center; gap: 15px; background: rgba(0, 0, 0, 0.3); padding: 8px 25px 8px 15px; border-radius: 30px; border: 1px solid var(--border-color); }
-        .btn-icon { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); font-size: 1.5rem; cursor: pointer; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
-        .btn-icon:hover { background: rgba(255,255,255,0.1); transform: translateY(-3px); border-color: var(--accent-color); box-shadow: 0 0 15px rgba(56, 189, 248, 0.3); }
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        .user-badge { display: flex; align-items: center; gap: 10px; background: rgba(0, 0, 0, 0.3); padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border-color); }
+        .btn-icon { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); font-size: 1.1rem; cursor: pointer; border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+        .btn-icon:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); border-color: var(--accent-color); box-shadow: 0 0 12px rgba(56, 189, 248, 0.3); }
         
         .btn-primary { 
-            background: linear-gradient(135deg, var(--accent-color), #0284c7, var(--kamenskoe-color), var(--accent-color)); 
-            background-size: 300% 100%; border: none; color: white; padding: 12px 25px; border-radius: 20px; cursor: pointer; font-weight: 700; font-family: 'Montserrat', sans-serif; transition: 0.3s; text-transform: uppercase; font-size: 1rem; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4); 
-            animation: shineText 5s ease infinite;
+            background: linear-gradient(135deg, var(--accent-color), #0284c7, var(--kamenskoe-color)); 
+            background-size: 200% 100%; border: none; color: white; padding: 9px 18px; border-radius: 12px; cursor: pointer; font-weight: 700; font-family: 'Montserrat', sans-serif; transition: 0.3s; text-transform: uppercase; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3); 
+            display: inline-flex; align-items: center; gap: 8px;
         }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(56, 189, 248, 0.6); }
-        .btn-danger { background: transparent; border: 1px solid var(--danger-color); color: var(--danger-color); padding: 12px 25px; border-radius: 20px; cursor: pointer; font-weight: 700; transition: 0.3s; font-size: 1rem; text-transform: uppercase; }
-        .btn-danger:hover { background: var(--danger-color); color: white; box-shadow: 0 0 20px rgba(248, 113, 113, 0.5); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(56, 189, 248, 0.5); }
+        .btn-danger { background: transparent; border: 1px solid var(--danger-color); color: var(--danger-color); padding: 8px 16px; border-radius: 12px; cursor: pointer; font-weight: 700; transition: 0.3s; font-size: 0.85rem; text-transform: uppercase; }
+        .btn-danger:hover { background: var(--danger-color); color: white; box-shadow: 0 0 15px rgba(248, 113, 113, 0.4); }
 
-        .content-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 30px; align-items: stretch; transition: 0.3s; }
+        /* Эластичная двухколоночная сетка */
+        .content-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 20px; align-items: start; }
         @media (max-width: 1200px) { .content-grid { grid-template-columns: 1fr; } }
         
-        .col-left, .col-right { display: flex; flex-direction: column; gap: 30px; }
-        .panel { background-color: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 30px; box-shadow: var(--shadow); display: flex; flex-direction: column; transition: all 0.3s ease; flex-grow: 1; }
+        .col-left, .col-right { display: flex; flex-direction: column; gap: 20px; }
+        .panel { background-color: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); display: flex; flex-direction: column; transition: all 0.3s ease; }
         
-        .panel-header-flex { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-bottom: 20px; }
-        .panel-title { font-size: 1.3rem; color: var(--text-main); margin: 0; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
-        .search-box { padding: 12px 20px; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); border-radius: 12px; font-size: 1.1rem; width: 250px; transition: all 0.3s ease; }
-        .search-box:focus { width: 350px; border-color: var(--accent-color); box-shadow: 0 0 15px rgba(56, 189, 248, 0.3); }
+        .panel-header-flex { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 15px; }
+        .panel-title { font-size: 1.05rem; color: var(--text-main); margin: 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; display: flex; align-items: center; gap: 10px; }
+        .search-box { padding: 8px 14px; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); border-radius: 10px; font-size: 0.9rem; width: 220px; transition: all 0.3s ease; }
+        .search-box:focus { width: 280px; border-color: var(--accent-color); box-shadow: 0 0 12px rgba(56, 189, 248, 0.3); }
 
-        .table-responsive { overflow-x: auto; border-radius: 12px; }
+        .table-responsive { overflow-x: auto; border-radius: 10px; }
         table { width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; }
-        th { color: var(--text-muted); font-size: 1.1rem; padding: 15px 10px; border-bottom: 2px solid var(--border-color); text-align: center; text-transform: uppercase; font-weight: 600; }
-        th:first-child { text-align: left; width: 30%; }
-        td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 1.2rem; text-align: center; vertical-align: middle; transition: all 0.3s ease; font-weight: 500; }
+        th { color: var(--text-muted); font-size: 0.85rem; padding: 10px 8px; border-bottom: 2px solid var(--border-color); text-align: center; text-transform: uppercase; font-weight: 600; }
+        th:first-child { text-align: left; width: 32%; }
+        td { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.95rem; text-align: center; vertical-align: middle; transition: all 0.2s ease; font-weight: 500; }
         tbody tr:hover td { background-color: var(--hover-row); }
-        tfoot td { padding: 20px 10px; border-top: 2px solid var(--border-color); font-size: 1.3rem; font-weight: 700; }
+        tfoot td { padding: 14px 8px; border-top: 2px solid var(--border-color); font-size: 1.05rem; font-weight: 700; }
         
-        .emp-avatar { width: 40px; height: 40px; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.5); object-fit: cover; }
-        .emp-info { display: flex; align-items: center; gap: 15px; }
+        .emp-avatar { width: 32px; height: 32px; border-radius: 50%; box-shadow: 0 0 8px rgba(0,0,0,0.5); object-fit: cover; }
+        .emp-info { display: flex; align-items: center; gap: 10px; }
 
-        .cell-input { width: 100%; max-width: 80px; padding: 10px; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); text-align: center; border-radius: 8px; font-size: 1.1rem; font-weight: 600; transition: 0.3s; }
-        .cell-input:focus { border-color: var(--accent-color); box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); transform: scale(1.05); }
-        .cell-input:disabled { background: transparent; border: none; font-size: 1.2rem; color: var(--text-main); }
+        .cell-input { width: 100%; max-width: 60px; padding: 6px; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); text-align: center; border-radius: 6px; font-size: 0.95rem; font-weight: 600; transition: 0.2s; }
+        .cell-input:focus { border-color: var(--accent-color); box-shadow: 0 0 8px rgba(56, 189, 248, 0.3); transform: scale(1.05); }
+        .cell-input:disabled { background: transparent; border: none; font-size: 1rem; color: var(--text-main); }
         
-        .traffic-light { width: 20px; height: 20px; border-radius: 50%; margin: 0 auto; transition: 0.3s; }
-        .tl-green { background: var(--success-color); box-shadow: 0 0 15px var(--success-color); }
-        .tl-yellow { background: var(--warning-color); box-shadow: 0 0 15px var(--warning-color); }
-        .tl-red { background: var(--danger-color); box-shadow: 0 0 15px var(--danger-color); }
+        .traffic-light { width: 16px; height: 16px; border-radius: 50%; margin: 0 auto; transition: 0.3s; }
+        .tl-green { background: var(--success-color); box-shadow: 0 0 10px var(--success-color); }
+        .tl-yellow { background: var(--warning-color); box-shadow: 0 0 10px var(--warning-color); }
+        .tl-red { background: var(--danger-color); box-shadow: 0 0 10px var(--danger-color); }
 
-        .att-cell { width: 36px; height: 36px; margin: 0 auto; border-radius: 10px; border: 1px solid var(--input-border); transition: all 0.2s; }
+        .att-cell { width: 28px; height: 28px; margin: 0 auto; border-radius: 8px; border: 1px solid var(--input-border); transition: all 0.2s; }
         .att-0 { background-color: transparent; } 
-        .att-1 { background-color: rgba(74, 222, 128, 0.2); border-color: var(--success-color); box-shadow: inset 0 0 10px rgba(74, 222, 128, 0.2); } 
-        .att-2 { background-color: rgba(251, 146, 60, 0.2); border-color: var(--warning-color); box-shadow: inset 0 0 10px rgba(251, 146, 60, 0.2); } 
-        .att-3 { background-color: rgba(248, 113, 113, 0.2); border-color: var(--danger-color); box-shadow: inset 0 0 10px rgba(248, 113, 113, 0.2); }
+        .att-1 { background-color: rgba(74, 222, 128, 0.2); border-color: var(--success-color); box-shadow: inset 0 0 8px rgba(74, 222, 128, 0.2); } 
+        .att-2 { background-color: rgba(251, 146, 60, 0.2); border-color: var(--warning-color); box-shadow: inset 0 0 8px rgba(251, 146, 60, 0.2); } 
+        .att-3 { background-color: rgba(248, 113, 113, 0.2); border-color: var(--danger-color); box-shadow: inset 0 0 8px rgba(248, 113, 113, 0.2); }
         .att-interactive { cursor: pointer; } 
         .att-interactive:hover { transform: scale(1.15); border-color: var(--text-main); }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-bottom: 0; }
-        .stat-box { background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(0,0,0,0.2)); padding: 25px 20px; border-radius: 20px; border: 1px solid var(--border-color); text-align: center; position: relative; overflow: hidden; box-shadow: var(--shadow); transition: 0.3s; }
-        .stat-box:hover { transform: translateY(-5px); border-color: rgba(56, 189, 248, 0.3); }
-        .stat-box::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--accent-color); box-shadow: 0 0 15px var(--accent-color); }
-        .stat-success::before { background: var(--success-color); box-shadow: 0 0 15px var(--success-color); }
-        .stat-danger::before { background: var(--danger-color); box-shadow: 0 0 15px var(--danger-color); }
-        .stat-box span { display: block; font-size: 1rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; font-weight: 700; letter-spacing: 1px; }
-        .stat-box b { font-size: 3.2rem; color: var(--text-main); font-weight: 900; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        .stat-box { background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(0,0,0,0.2)); padding: 16px 14px; border-radius: 14px; border: 1px solid var(--border-color); text-align: center; position: relative; overflow: hidden; box-shadow: var(--shadow); transition: 0.3s; }
+        .stat-box:hover { transform: translateY(-3px); border-color: rgba(56, 189, 248, 0.3); }
+        .stat-box::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--accent-color); box-shadow: 0 0 10px var(--accent-color); }
+        .stat-success::before { background: var(--success-color); box-shadow: 0 0 10px var(--success-color); }
+        .stat-danger::before { background: var(--danger-color); box-shadow: 0 0 10px var(--danger-color); }
+        .stat-box span { display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; font-weight: 700; letter-spacing: 0.8px; }
+        .stat-box b { font-size: 2.2rem; color: var(--text-main); font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.3); }
         
-        .global-totals-block { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color); align-items: center; justify-content: space-around; }
+        .global-totals-block { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color); align-items: center; justify-content: space-around; }
         .gt-item { text-align: center; display: flex; flex-direction: column; align-items: center; }
-        .gt-item label { font-size: 0.85rem; color: var(--text-muted); font-weight: 700; margin-bottom: 8px; text-transform: uppercase; }
-        .gt-item input { width: 100%; max-width: 90px; padding: 10px; border-radius: 10px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text-main); text-align: center; font-weight: 800; font-size: 1.2rem; transition: 0.3s; }
-        .gt-item input:focus { border-color: var(--accent-color); box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); }
-        .gt-item.highlight { background: rgba(167, 139, 250, 0.1); border-radius: 16px; padding: 10px 20px; border: 1px solid rgba(167, 139, 250, 0.3); box-shadow: inset 0 0 20px rgba(167, 139, 250, 0.05); }
-        .gt-item.highlight span { font-size: 1.8rem; font-weight: 900; color: var(--kamenskoe-color); text-shadow: 0 0 10px rgba(167, 139, 250, 0.4); }
+        .gt-item label { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; margin-bottom: 4px; text-transform: uppercase; }
+        .gt-item input { width: 100%; max-width: 75px; padding: 6px; border-radius: 8px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text-main); text-align: center; font-weight: 800; font-size: 1rem; transition: 0.3s; }
+        .gt-item input:focus { border-color: var(--accent-color); box-shadow: 0 0 8px rgba(56, 189, 248, 0.3); }
+        .gt-item.highlight { background: rgba(167, 139, 250, 0.12); border-radius: 12px; padding: 6px 14px; border: 1px solid rgba(167, 139, 250, 0.3); }
+        .gt-item.highlight span { font-size: 1.4rem; font-weight: 900; color: var(--kamenskoe-color); }
 
         .chart-container { position: relative; width: 100%; display: flex; align-items: center; justify-content: center; }
-        .chart-container canvas { filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4)); }
-        .chart-container-compact { height: 240px; min-height: 240px; margin-top: 10px; }
-        .chart-container-large { min-height: 280px; flex-grow: 1; }
+        .chart-container-compact { height: 180px; margin-top: 5px; }
+        .chart-container-large { min-height: 200px; flex-grow: 1; }
 
-        .chart-toggle-group { display: flex; gap: 5px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 10px; border: 1px solid var(--border-color); }
-        .chart-toggle-group i { font-size: 1.1rem; color: var(--text-muted); cursor: pointer; transition: 0.3s; padding: 8px 12px; border-radius: 8px; }
-        .chart-toggle-group i.active { color: white; background: var(--accent-color); box-shadow: 0 0 10px rgba(56, 189, 248, 0.5); }
+        .chart-toggle-group { display: flex; gap: 4px; background: rgba(0,0,0,0.3); padding: 4px; border-radius: 8px; border: 1px solid var(--border-color); }
+        .chart-toggle-group i { font-size: 0.9rem; color: var(--text-muted); cursor: pointer; transition: 0.3s; padding: 6px 10px; border-radius: 6px; }
+        .chart-toggle-group i.active { color: white; background: var(--accent-color); box-shadow: 0 0 8px rgba(56, 189, 248, 0.5); }
 
-        .admin-panel { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(56, 189, 248, 0.3); display: flex; flex-wrap: wrap; gap: 30px; border-radius: 20px; padding: 35px; margin-top: 30px; box-shadow: 0 0 30px rgba(56, 189, 248, 0.1); }
-        .admin-section { flex: 1; min-width: 320px; background: rgba(0,0,0,0.2); padding: 25px; border-radius: 16px; border: 1px solid var(--border-color); }
-        .admin-section h3 { margin-top: 0; color: var(--text-main); font-size: 1.2rem; display: flex; gap: 10px; align-items: center; }
-        .input-group { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .input-group label { font-size: 1.1rem; color: var(--text-muted); font-weight: 600; }
-        .input-group input, .input-group textarea { width: 100%; max-width: 220px; padding: 12px; border-radius: 10px; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); font-size: 1rem; }
-        .btn-full { width: 100%; padding: 15px; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 1.1rem; }
+        /* СТИЛИ ВКЛАДКИ ИНСТРУМЕНТЫ (TOOLS) */
+        .tools-header-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; justify-content: space-between; }
+        .filter-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+        .chip { padding: 7px 14px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: var(--text-muted); cursor: pointer; font-size: 0.82rem; font-weight: 600; transition: 0.2s; }
+        .chip:hover, .chip.active { background: var(--accent-color); color: #fff; border-color: var(--accent-color); box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); }
+
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .tool-card { background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; transition: all 0.3s ease; box-shadow: var(--shadow); position: relative; }
+        .tool-card:hover { transform: translateY(-4px); border-color: rgba(56, 189, 248, 0.4); box-shadow: 0 12px 30px rgba(0,0,0,0.6); }
+        .tool-card-img { width: 100%; height: 140px; object-fit: cover; background: #000; border-bottom: 1px solid var(--border-color); }
+        .tool-card-body { padding: 16px; display: flex; flex-direction: column; flex-grow: 1; gap: 10px; }
+        .tool-category-badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; background: rgba(56, 189, 248, 0.15); color: var(--accent-color); border: 1px solid rgba(56, 189, 248, 0.3); width: fit-content; }
+        .tool-card-title { font-size: 1.1rem; font-weight: 800; margin: 0; color: var(--text-main); }
+        .tool-card-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; margin: 0; flex-grow: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .tool-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+        .tag-item { font-size: 0.7rem; color: var(--text-muted); background: rgba(255,255,255,0.04); padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); }
+        .tool-card-footer { margin-top: 10px; display: flex; gap: 8px; }
+
+        .admin-controls-overlay { position: absolute; top: 10px; right: 10px; display: flex; gap: 6px; z-index: 5; }
+        .btn-mini-admin { background: rgba(15, 23, 42, 0.85); border: 1px solid var(--border-color); color: #fff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-size: 0.8rem; backdrop-filter: blur(5px); }
+        .btn-mini-admin:hover { background: var(--accent-color); transform: scale(1.1); }
+        .btn-mini-admin.delete:hover { background: var(--danger-color); }
+
+        .admin-panel { background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(56, 189, 248, 0.3); display: flex; flex-wrap: wrap; gap: 20px; border-radius: 16px; padding: 20px; margin-top: 20px; box-shadow: 0 0 25px rgba(56, 189, 248, 0.1); }
+        .admin-section { flex: 1; min-width: 280px; background: rgba(0,0,0,0.2); padding: 18px; border-radius: 12px; border: 1px solid var(--border-color); }
+        .admin-section h3 { margin-top: 0; color: var(--text-main); font-size: 1rem; display: flex; gap: 8px; align-items: center; }
+        .input-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+        .input-group label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+        .input-group input, .input-group textarea, .input-group select { width: 100%; padding: 10px; border-radius: 8px; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); font-size: 0.9rem; font-family: inherit; }
+        .btn-full { width: 100%; padding: 12px; margin-top: 8px; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 0.9rem; }
         
         .btn-mandatory {
-            background: linear-gradient(45deg, #ef4444, #b91c1c, #f43f5e, #ef4444); background-size: 300% 300%;
-            color: white; border: none; padding: 16px; font-size: 1.15rem; font-weight: 800; text-transform: uppercase; border-radius: 16px; cursor: pointer;
-            animation: pulse-red 2s infinite, shineText 4s ease infinite; box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px; transition: transform 0.3s; margin-top: 15px;
+            background: linear-gradient(45deg, #ef4444, #b91c1c, #f43f5e); background-size: 200% 200%;
+            color: white; border: none; padding: 12px; font-size: 0.9rem; font-weight: 800; text-transform: uppercase; border-radius: 10px; cursor: pointer;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.2s; margin-top: 10px;
         }
-        .btn-mandatory:hover { transform: scale(1.03); box-shadow: 0 0 35px rgba(239, 68, 68, 0.9); }
-        @keyframes pulse-red { 0% { transform: scale(1); box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); } 50% { transform: scale(1.02); box-shadow: 0 0 30px rgba(239, 68, 68, 0.9); } 100% { transform: scale(1); box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); } }
+        .btn-mandatory:hover { transform: scale(1.02); box-shadow: 0 0 25px rgba(239, 68, 68, 0.8); }
 
         .hidden { display: none !important; }
 
-        #toastContainer { position: fixed; bottom: 40px; right: 40px; display: flex; flex-direction: column; gap: 15px; z-index: 10000; }
-        .toast { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); border-left: 4px solid var(--accent-color); border-radius: 16px; padding: 20px 25px; display: flex; align-items: center; gap: 20px; animation: slideIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; font-size: 1.1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .toast img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent-color); box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); object-fit: cover; }
-        @keyframes slideIn { from { transform: translateX(150%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        #toastContainer { position: fixed; bottom: 25px; right: 25px; display: flex; flex-direction: column; gap: 10px; z-index: 10000; }
+        .toast { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); border-left: 4px solid var(--accent-color); border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; gap: 14px; animation: slideIn 0.4s ease forwards; font-size: 0.9rem; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid var(--border-color); }
+        .toast img { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--accent-color); object-fit: cover; }
+        @keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-        .chat-widget { position: fixed; bottom: 40px; left: 40px; z-index: 9000; }
-        .chat-btn { width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-color), #0284c7); color: white; border: none; font-size: 1.8rem; cursor: pointer; box-shadow: 0 10px 25px rgba(56, 189, 248, 0.4); display: flex; align-items: center; justify-content: center; transition: 0.3s; }
-        .chat-btn:hover { transform: scale(1.1); box-shadow: 0 15px 35px rgba(56, 189, 248, 0.6); }
-
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(10px); z-index: 10000; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: 0.3s; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 6, 23, 0.82); backdrop-filter: blur(10px); z-index: 10000; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: 0.3s; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content { background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 24px; padding: 40px; width: 500px; box-shadow: 0 25px 50px rgba(0,0,0,0.5); transform: translateY(30px); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
+        .modal-content { background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 25px; width: 480px; max-width: 92%; box-shadow: 0 20px 40px rgba(0,0,0,0.6); transform: translateY(20px); transition: 0.3s ease; position: relative; }
         .modal-overlay.active .modal-content { transform: translateY(0); }
-        .modal-content.wide { width: 95%; max-width: 1700px; max-height: 90vh; overflow-y: auto; }
-        .close-modal { position: absolute; top: 25px; right: 30px; font-size: 1.8rem; color: var(--text-muted); cursor: pointer; transition: 0.3s; }
+        .modal-content.wide { width: 95%; max-width: 1500px; max-height: 88vh; overflow-y: auto; }
+        .close-modal { position: absolute; top: 20px; right: 20px; font-size: 1.4rem; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
         .close-modal:hover { color: var(--danger-color); transform: rotate(90deg); }
 
-        .archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 30px; }
-        .archive-card { background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 20px; padding: 30px; transition: 0.3s; cursor: pointer; position: relative; overflow: hidden; box-shadow: var(--shadow); }
-        .archive-card::before { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 4px; background: var(--accent-color); box-shadow: 0 0 15px var(--accent-color); transition: 0.3s; }
-        .archive-card:hover { transform: translateY(-5px); border-color: rgba(56, 189, 248, 0.3); background: rgba(56, 189, 248, 0.05); }
-        .archive-card:hover::before { width: 6px; }
-        .archive-card h3 { color: var(--text-main); margin-top: 0; font-size: 1.4rem; font-weight: 700; }
-        .archive-card .date-range { color: var(--accent-color); font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; }
-
-        .highlight-col { background: rgba(56, 189, 248, 0.15) !important; box-shadow: inset 0 0 15px rgba(56, 189, 248, 0.3); border-radius: 8px; }
-        
-        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-grad-1); z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease, visibility 0.5s; }
-        .loader-spinner { width: 80px; height: 80px; border: 4px solid rgba(56, 189, 248, 0.1); border-top-color: var(--accent-color); border-radius: 50%; animation: spin 1s cubic-bezier(0.5, 0, 0.5, 1) infinite; margin-bottom: 25px; box-shadow: 0 0 20px rgba(56, 189, 248, 0.2); }
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-grad-1); z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.4s ease, visibility 0.4s; }
+        .loader-spinner { width: 60px; height: 60px; border: 3px solid rgba(56, 189, 248, 0.1); border-top-color: var(--accent-color); border-radius: 50%; animation: spin 1s cubic-bezier(0.5, 0, 0.5, 1) infinite; margin-bottom: 20px; box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); }
         @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
     <div id="loader">
         <div class="loader-spinner"></div>
-        <h2 style="color:var(--text-main); font-weight: 900; letter-spacing: 4px; font-size: 1.8rem;">TIGER <span class="text-gradient">DASHBOARD</span></h2>
+        <h2 style="color:var(--text-main); font-weight: 900; letter-spacing: 3px; font-size: 1.5rem;">TIGER <span class="text-gradient">DASHBOARD</span></h2>
     </div>
 
+    <!-- Задняя интерактивная паутинка (tsParticles) -->
     <div id="tsparticles"></div>
 
     <div class="dashboard-container">
@@ -237,8 +249,9 @@
             </div>
             
             <div class="nav-tabs">
-                <button class="nav-tab active" onclick="switchView('main')"><i class="fas fa-chart-pie"></i> Дашборд</button>
-                <button class="nav-tab" onclick="switchView('archive')"><i class="fas fa-folder-open"></i> Архив Недель</button>
+                <button class="nav-tab active" onclick="switchView('main', this)"><i class="fas fa-chart-pie"></i> Дашборд</button>
+                <button class="nav-tab" onclick="switchView('tools', this)"><i class="fas fa-cubes"></i> Инструменты</button>
+                <button class="nav-tab" onclick="switchView('archive', this)"><i class="fas fa-folder-open"></i> Архив Недель</button>
             </div>
 
             <div class="header-right">
@@ -246,8 +259,8 @@
                 <button id="themeToggleBtn" class="btn-icon" onclick="toggleBaseTheme()" title="Сменить тему"><i class="fas fa-moon"></i></button>
                 <div class="user-badge">
                     <div style="display:flex; flex-direction:column; justify-content:center; text-align: right;">
-                        <span id="displayUsername" style="color:var(--text-main); font-weight:700; font-size: 1rem;">Загрузка...</span>
-                        <span id="displayRole" style="color:var(--accent-color); font-size:0.85rem; font-weight:600;">...</span>
+                        <span id="displayUsername" style="color:var(--text-main); font-weight:700; font-size: 0.85rem;">Загрузка...</span>
+                        <span id="displayRole" style="color:var(--accent-color); font-size:0.75rem; font-weight:600;">...</span>
                     </div>
                 </div>
                 <button class="btn-icon" onclick="openProfileSettings()" title="Настройки профиля"><i class="fas fa-user-cog"></i></button>
@@ -263,7 +276,7 @@
             <div class="stat-box stat-success animated-panel"><span>Общее кол-во</span><b id="kpiFact">0</b></div>
         </div>
 
-        <!-- ГЛАВНАЯ ВКЛАДКА -->
+        <!-- ГЛАВНАЯ ВКЛАДКА (ДАШБОРД) -->
         <div id="viewMain">
             <div class="content-grid">
                 <!-- ЛЕВАЯ КОЛОНКА -->
@@ -331,8 +344,8 @@
 
                     <!-- Динамика городов -->
                     <div class="panel animated-panel">
-                        <h3 class="panel-title" style="margin-bottom:20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px;"><i class="fas fa-chart-area" style="color:var(--accent-color);"></i> Динамика городов</h3>
-                        <div class="table-responsive" style="margin-bottom: 15px;">
+                        <h3 class="panel-title" style="margin-bottom:12px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;"><i class="fas fa-chart-area" style="color:var(--accent-color);"></i> Динамика городов</h3>
+                        <div class="table-responsive" style="margin-bottom: 10px;">
                             <table>
                                 <thead><tr><th style="width:25%;">Регион</th><th>ПН</th><th>ВТ</th><th>СР</th><th>ЧТ</th><th>ПТ</th><th>СБ</th></tr></thead>
                                 <tbody id="cityDaysBody"></tbody>
@@ -343,7 +356,7 @@
                 </div>
             </div>
 
-            <!-- АДМИН ПАНЕЛЬ -->
+            <!-- АДМИН ПАНЕЛЬ (ДАШБОРД) -->
             <div id="adminPanel" class="admin-panel hidden animated-panel">
                 <div class="admin-section">
                     <h3><i class="fas fa-sliders-h" style="color:var(--accent-color);"></i> Настройки KPI</h3>
@@ -365,14 +378,103 @@
             </div>
         </div>
 
-        <!-- ВКЛАДКА АРХИВА -->
-        <div id="viewArchive" class="hidden">
+        <!-- НОВАЯ ВКЛАДКА: ИНСТРУМЕНТЫ -->
+        <div id="viewTools" class="hidden">
             <div class="panel animated-panel" style="min-height: 70vh;">
-                <h2 style="color: var(--text-main); margin-top: 0; font-size: 2rem; display:flex; align-items:center; gap:15px;"><i class="fas fa-history" style="color:var(--accent-color);"></i> База Сохраненных Данных</h2>
-                <p style="color: var(--text-muted); font-size: 1.1rem;">Здесь надежно хранятся все закрытые недели. Выберите период для просмотра детальной статистики и графиков.</p>
-                <div id="archiveContainer" class="archive-grid" style="margin-top: 30px;">
+                <div class="tools-header-actions">
+                    <div>
+                        <h2 style="margin:0; font-size: 1.5rem; color: var(--text-main); font-weight: 800;"><i class="fas fa-cubes" style="color:var(--accent-color);"></i> Библиотека Инструментов & Промптов</h2>
+                        <p style="margin: 4px 0 0 0; color: var(--text-muted); font-size: 0.88rem;">Коллекция нейросетевых промптов, полезных сервисов и рабочих шаблонов.</p>
+                    </div>
+                    
+                    <div style="display:flex; gap:12px; align-items:center;">
+                        <input type="text" id="toolSearchInput" class="search-box" placeholder="Поиск инструментов..." oninput="renderTools()">
+                        <button id="addToolBtn" class="btn-primary hidden" onclick="openAddToolModal()"><i class="fas fa-plus"></i> Добавить</button>
+                    </div>
+                </div>
+
+                <!-- Фильтры по категориям -->
+                <div class="filter-chips" style="margin-bottom: 20px;">
+                    <div class="chip active" onclick="filterToolsCategory('all', this)">Все</div>
+                    <div class="chip" onclick="filterToolsCategory('Промпты', this)">Промпты</div>
+                    <div class="chip" onclick="filterToolsCategory('AI Сервисы', this)">AI Сервисы</div>
+                    <div class="chip" onclick="filterToolsCategory('Шаблоны', this)">Шаблоны</div>
+                    <div class="chip" onclick="filterToolsCategory('Ресурсы', this)">Ресурсы</div>
+                </div>
+
+                <!-- Сетка карточек -->
+                <div id="toolsGrid" class="tools-grid">
                     <!-- Рендеринг JS -->
                 </div>
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА: АРХИВ -->
+        <div id="viewArchive" class="hidden">
+            <div class="panel animated-panel" style="min-height: 70vh;">
+                <h2 style="color: var(--text-main); margin-top: 0; font-size: 1.6rem; display:flex; align-items:center; gap:12px;"><i class="fas fa-history" style="color:var(--accent-color);"></i> База Сохраненных Данных</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Здесь надежно хранятся все закрытые недели.</p>
+                <div id="archiveContainer" class="tools-grid" style="margin-top: 20px;">
+                    <!-- Рендеринг JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА: СОЗДАНИЕ/РЕДАКТИРОВАНИЕ ИНСТРУМЕНТА (АДМИН) -->
+    <div id="toolModal" class="modal-overlay">
+        <div class="modal-content animated-panel">
+            <i class="fas fa-times close-modal" onclick="closeToolModal()"></i>
+            <h2 id="toolModalTitle" style="margin-top:0; color:var(--accent-color); font-weight:800; font-size: 1.3rem;">Добавить инструмент</h2>
+            <input type="hidden" id="toolEditId">
+            
+            <div class="input-group">
+                <label>Название</label>
+                <input type="text" id="toolTitle" placeholder="Например: Промпт для генерации арт-аватаров">
+            </div>
+            
+            <div style="display:flex; gap:10px;">
+                <div class="input-group" style="flex:1;">
+                    <label>Категория</label>
+                    <select id="toolCategory">
+                        <option value="Промпты">Промпты</option>
+                        <option value="AI Сервисы">AI Сервисы</option>
+                        <option value="Шаблоны">Шаблоны</option>
+                        <option value="Ресурсы">Ресурсы</option>
+                    </select>
+                </div>
+                <div class="input-group" style="flex:1;">
+                    <label>Тип</label>
+                    <select id="toolType" onchange="toggleToolTypeFields()">
+                        <option value="prompt">Промпт (текст)</option>
+                        <option value="link">Ссылка (веб-сайт)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label id="toolContentLabel">Текст Промпта</label>
+                <textarea id="toolContent" rows="4" placeholder="Введите текст промпта или URL сайта..."></textarea>
+            </div>
+
+            <div class="input-group">
+                <label>Описание</label>
+                <textarea id="toolDesc" rows="2" placeholder="Краткое описание назначения..."></textarea>
+            </div>
+
+            <div class="input-group">
+                <label>URL Картинки (Превью)</label>
+                <input type="text" id="toolImageUrl" placeholder="https://... или image_963a6e.png">
+            </div>
+
+            <div class="input-group">
+                <label>Теги (через запятую)</label>
+                <input type="text" id="toolTags" placeholder="Midjourney, GPT, Дизайн">
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:15px;">
+                <button class="btn-primary" style="flex:1; background:transparent; border:1px solid var(--border-color); color:var(--text-main);" onclick="closeToolModal()">Отмена</button>
+                <button class="btn-primary" style="flex:1;" onclick="saveTool()"><i class="fas fa-save"></i> Сохранить</button>
             </div>
         </div>
     </div>
@@ -380,24 +482,24 @@
     <!-- МОДАЛКА: СОХРАНЕНИЕ НЕДЕЛИ -->
     <div id="saveWeekModal" class="modal-overlay">
         <div class="modal-content animated-panel">
-            <h2 style="margin-top:0; color:var(--danger-color); font-weight:800;"><i class="fas fa-exclamation-triangle"></i> Закрытие Недели</h2>
-            <p style="color:var(--text-muted); font-size:1.05rem; line-height:1.5;">Укажите даты текущей недели. Данные будут <b>навсегда перенесены в архив</b>, а текущие таблицы обнулятся для начала новой недели.</p>
+            <h2 style="margin-top:0; color:var(--danger-color); font-weight:800; font-size:1.3rem;"><i class="fas fa-exclamation-triangle"></i> Закрытие Недели</h2>
+            <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.4;">Данные будут перенесены в архив, а текущие таблицы обнулятся.</p>
             
-            <div style="display:flex; gap:15px; margin-top:25px;">
+            <div style="display:flex; gap:10px; margin-top:15px;">
                 <div style="flex:1;">
-                    <label style="font-size:0.9rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Начало (ПН)</label>
-                    <input type="date" id="archStart" style="width:100%; padding:12px; border-radius:10px; background:var(--input-bg); color:var(--text-main); border:1px solid var(--input-border); margin-top:8px;">
+                    <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Начало (ПН)</label>
+                    <input type="date" id="archStart" style="width:100%; padding:8px; border-radius:8px; background:var(--input-bg); color:var(--text-main); border:1px solid var(--input-border); margin-top:4px;">
                 </div>
                 <div style="flex:1;">
-                    <label style="font-size:0.9rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Конец (СБ)</label>
-                    <input type="date" id="archEnd" style="width:100%; padding:12px; border-radius:10px; background:var(--input-bg); color:var(--text-main); border:1px solid var(--input-border); margin-top:8px;">
+                    <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Конец (СБ)</label>
+                    <input type="date" id="archEnd" style="width:100%; padding:8px; border-radius:8px; background:var(--input-bg); color:var(--text-main); border:1px solid var(--input-border); margin-top:4px;">
                 </div>
             </div>
             
-            <input type="password" id="archPin" placeholder="PIN Инженера (0402)" style="width:100%; padding:15px; border-radius:10px; background:rgba(0,0,0,0.5); color:white; border:1px solid var(--danger-color); margin-top:25px; text-align:center; letter-spacing: 6px; font-size: 1.2rem; font-weight:700;">
+            <input type="password" id="archPin" placeholder="PIN Инженера (0402)" style="width:100%; padding:10px; border-radius:8px; background:rgba(0,0,0,0.5); color:white; border:1px solid var(--danger-color); margin-top:15px; text-align:center; letter-spacing: 4px; font-weight:700;">
 
-            <div style="display:flex; gap:15px; margin-top:30px;">
-                <button class="btn-primary" style="flex:1; background:transparent; border:1px solid var(--border-color); color:var(--text-main); box-shadow:none; animation:none;" onclick="closeArchiveModal()">Отмена</button>
+            <div style="display:flex; gap:10px; margin-top:20px;">
+                <button class="btn-primary" style="flex:1; background:transparent; border:1px solid var(--border-color); color:var(--text-main);" onclick="closeArchiveModal()">Отмена</button>
                 <button class="btn-danger" style="flex:1; background:linear-gradient(135deg, #ef4444, #b91c1c); color:white; border:none;" onclick="processArchiveWeek()"><i class="fas fa-check"></i> Подтвердить</button>
             </div>
         </div>
@@ -407,9 +509,9 @@
     <div id="archiveDetailsModal" class="modal-overlay">
         <div class="modal-content wide animated-panel">
             <i class="fas fa-times close-modal" onclick="closeArchiveDetails()"></i>
-            <h2 id="archDetailTitle" style="color:var(--text-main); font-size:1.8rem; margin-top:0; font-weight:800;">Сводка за период</h2>
+            <h2 id="archDetailTitle" style="color:var(--text-main); font-size:1.4rem; margin-top:0; font-weight:800;">Сводка за период</h2>
             
-            <div class="stats-grid" style="margin-top:25px; margin-bottom: 30px;">
+            <div class="stats-grid" style="margin-top:15px; margin-bottom: 20px;">
                 <div class="stat-box"><span>В штате</span><b id="archKpiCount">0</b></div>
                 <div class="stat-box stat-success"><span>Факт Компании</span><b id="archKpiTotal">0</b></div>
                 <div class="stat-box"><span>Никополь</span><b id="archKpiNk" style="color:var(--accent-color);">0</b></div>
@@ -418,8 +520,8 @@
 
             <div class="content-grid">
                 <div class="col-left">
-                    <h3 class="panel-title" style="margin-bottom:15px;"><i class="fas fa-users"></i> Итоги Сотрудников</h3>
-                    <div class="table-responsive" style="background:rgba(0,0,0,0.2); padding:15px; border-radius:15px; border:1px solid var(--border-color);">
+                    <h3 class="panel-title" style="margin-bottom:10px;"><i class="fas fa-users"></i> Итоги Сотрудников</h3>
+                    <div class="table-responsive" style="background:rgba(0,0,0,0.2); padding:10px; border-radius:12px; border:1px solid var(--border-color);">
                         <table>
                             <thead><tr><th>Сотрудник</th><th>ПН</th><th>ВТ</th><th>СР</th><th>ЧТ</th><th>ПТ</th><th>СБ</th><th style="color:var(--success-color);">Итог</th></tr></thead>
                             <tbody id="archEmpBody"></tbody>
@@ -427,19 +529,11 @@
                     </div>
                 </div>
                 <div class="col-right">
-                    <h3 class="panel-title" style="margin-bottom:15px;"><i class="fas fa-chart-area"></i> Распределение по городам</h3>
-                    <div class="table-responsive" style="background:rgba(0,0,0,0.2); padding:15px; border-radius:15px; border:1px solid var(--border-color); margin-bottom: 25px;">
+                    <h3 class="panel-title" style="margin-bottom:10px;"><i class="fas fa-chart-area"></i> Распределение по городам</h3>
+                    <div class="table-responsive" style="background:rgba(0,0,0,0.2); padding:10px; border-radius:12px; border:1px solid var(--border-color); margin-bottom: 15px;">
                         <table>
                             <thead><tr><th>Город</th><th>ПН</th><th>ВТ</th><th>СР</th><th>ЧТ</th><th>ПТ</th><th>СБ</th><th style="color:var(--success-color);">Итог</th></tr></thead>
                             <tbody id="archCityBody"></tbody>
-                        </table>
-                    </div>
-                    
-                    <h3 class="panel-title" style="margin-bottom:15px;"><i class="fas fa-calendar-check"></i> История Посещаемости</h3>
-                    <div class="table-responsive" style="background:rgba(0,0,0,0.2); padding:15px; border-radius:15px; border:1px solid var(--border-color);">
-                        <table>
-                            <thead><tr><th>Сотрудник</th><th>ПН</th><th>ВТ</th><th>СР</th><th>ЧТ</th><th>ПТ</th><th>СБ</th></tr></thead>
-                            <tbody id="archAttBody"></tbody>
                         </table>
                     </div>
                 </div>
@@ -447,30 +541,27 @@
         </div>
     </div>
 
-    <!-- ВИДЖЕТ ЧАТА -->
-    <div class="chat-widget">
-        <button class="chat-btn" onclick="toggleChat()"><i class="fas fa-comment-dots"></i></button>
-    </div>
-    
     <div id="toastContainer"></div>
 
     <script>
+        // Инициализация заднего фона «Паутинка из точек и нитей»
         tsParticles.load("tsparticles", {
             particles: { 
-                number: { value: 120, density: { enable: true, area: 800 } }, 
+                number: { value: 75, density: { enable: true, area: 900 } }, 
                 color: { value: ["#38bdf8", "#a78bfa", "#4ade80"] }, 
                 shape: { type: "circle" }, 
-                opacity: { value: 0.5, random: true, animation: { enable: true, speed: 1.5, minimumValue: 0.1, sync: false } }, 
+                opacity: { value: 0.5, random: true }, 
                 size: { value: { min: 1, max: 3 } }, 
-                links: { enable: true, distance: 150, color: "#94a3b8", opacity: 0.4, width: 1.2 }, 
-                move: { enable: true, speed: 1.5, direction: "none", outModes: "out" } 
+                links: { enable: true, distance: 140, color: "#38bdf8", opacity: 0.28, width: 1.1 }, 
+                move: { enable: true, speed: 1.2, direction: "none", outModes: "out" } 
             },
             interactivity: {
-                events: { onHover: { enable: true, mode: "grab" }, onClick: { enable: true, mode: "repulse" } },
-                modes: { grab: { distance: 200, links: { opacity: 0.8 } } }
+                events: { onHover: { enable: true, mode: "grab" }, onClick: { enable: true, mode: "push" } },
+                modes: { grab: { distance: 170, links: { opacity: 0.6, color: "#38bdf8" } } }
             }
         });
 
+        // Конфигурация Supabase
         const SUPA_URL = "https://geolvowpvdxnimypcvfx.supabase.co"; 
         const SUPA_KEY = "sb_publishable_NYYVxFGX8ZnVK0CyEFPehg_z58eWBut"; 
         const db = window.supabase.createClient(SUPA_URL, SUPA_KEY);
@@ -483,24 +574,18 @@
         let metrics = { daily_plan: 26, weekly_plan: 130, total: 0, nikopol: 0, zv: 0 };
         let cityDays = { nikopol: [0,0,0,0,0,0], zv: [0,0,0,0,0,0], kamenka: [0,0,0,0,0,0] };
         
+        let toolsList = [];
+        let activeToolCategory = 'all';
+
         let chartRegionInst = null;
         let currentRegionType = 'doughnut';
         let chartLineInst = null;
-        let globalArchiveData = [];
         
-        const notifySound = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
         const dbDays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
         const attDays = ['att_mon', 'att_tue', 'att_wed', 'att_thu', 'att_fri', 'att_sat'];
 
         Chart.defaults.font.family = "'Montserrat', sans-serif";
         Chart.defaults.color = '#94a3b8';
-        Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(15, 23, 42, 0.9)';
-        Chart.defaults.plugins.tooltip.titleFont = { size: 14, family: "'Montserrat', sans-serif", weight: 'bold' };
-        Chart.defaults.plugins.tooltip.bodyFont = { size: 13, family: "'Montserrat', sans-serif" };
-        Chart.defaults.plugins.tooltip.padding = 12;
-        Chart.defaults.plugins.tooltip.cornerRadius = 8;
-        Chart.defaults.plugins.tooltip.borderColor = 'rgba(56, 189, 248, 0.3)';
-        Chart.defaults.plugins.tooltip.borderWidth = 1;
 
         if (localStorage.getItem('crm_theme') === 'light') { document.documentElement.setAttribute('data-theme', 'light'); }
 
@@ -508,22 +593,33 @@
             if (!userRole) { window.location.href = 'login.html'; return; }
             document.getElementById('displayUsername').innerText = userName;
             document.getElementById('displayRole').innerText = isAdmin ? 'Администратор' : 'Сотрудник';
-            if (isAdmin) document.getElementById('adminPanel').classList.remove('hidden');
+            
+            if (isAdmin) {
+                document.getElementById('adminPanel').classList.remove('hidden');
+                document.getElementById('addToolBtn').classList.remove('hidden');
+            }
 
             await fetchData();
+            await fetchTools();
             setupRealtimeSubscriptions();
-            setInterval(checkTimeTriggers, 30000);
             
             setTimeout(() => {
                 document.getElementById('loader').style.opacity = '0';
-                setTimeout(() => document.getElementById('loader').style.visibility = 'hidden', 500);
-            }, 800);
+                setTimeout(() => document.getElementById('loader').style.visibility = 'hidden', 400);
+            }, 600);
         };
 
         function setupRealtimeSubscriptions() {
-            db.channel('public:employees').on('postgres_changes', { event: '*', schema: 'public', table: 'employees' }, () => { if (document.activeElement?.tagName !== 'INPUT') fetchData(); }).subscribe();
-            db.channel('public:global_metrics').on('postgres_changes', { event: '*', schema: 'public', table: 'global_metrics' }, payload => {
+            db.channel('public:employees').on('postgres_changes', { event: '*', schema: 'public', table: 'employees' }, () => {
                 if (document.activeElement?.tagName !== 'INPUT') fetchData();
+            }).subscribe();
+            
+            db.channel('public:global_metrics').on('postgres_changes', { event: '*', schema: 'public', table: 'global_metrics' }, () => {
+                if (document.activeElement?.tagName !== 'INPUT') fetchData();
+            }).subscribe();
+
+            db.channel('public:system_tools').on('postgres_changes', { event: '*', schema: 'public', table: 'system_tools' }, () => {
+                fetchTools();
             }).subscribe();
         }
 
@@ -543,7 +639,7 @@
                 employees = dbEmps.map(e => ({
                     id: e.id, name: e.name, color: e.personal_color || '#38bdf8',
                     data: [e.mon||0, e.tue||0, e.wed||0, e.thu||0, e.fri||0, e.sat||0],
-                    att: [e.att_mon||0, e.att_tue||0, e.att_wed||0, e.att_thu||0, e.att_fri||0, e.att_sat||0]
+                    att: [e.att_mon||0, e.att_tue||0, e.att_wed||0, e.thu||0, e.fri||0, e.sat||0]
                 }));
             }
             renderUI();
@@ -581,7 +677,7 @@
                 let tr = document.createElement('tr');
                 let cells = `<td>
                     <div class="emp-info">
-                        <img src="${avatarUrl}" class="emp-avatar" style="box-shadow: 0 0 10px ${emp.color}80;">
+                        <img src="${avatarUrl}" class="emp-avatar" style="box-shadow: 0 0 8px ${emp.color}80;">
                         <span style="color:${emp.color};font-weight:700;">${emp.name}</span>
                     </div>
                 </td>`;
@@ -594,7 +690,7 @@
                 let trAtt = document.createElement('tr');
                 let attCells = `<td>
                     <div class="emp-info">
-                        <img src="${avatarUrl}" class="emp-avatar" style="width:30px;height:30px;">
+                        <img src="${avatarUrl}" class="emp-avatar" style="width:26px;height:26px;">
                         <span style="color:${emp.color};font-weight:700;">${emp.name}</span>
                     </div>
                 </td>`;
@@ -636,6 +732,182 @@
         async function saveMetrics() { if(!isAdmin) return; metrics.total = parseInt(document.getElementById('inpTotal').value)||0; metrics.nikopol = parseInt(document.getElementById('inpNk').value)||0; metrics.zv = parseInt(document.getElementById('inpZv').value)||0; renderUI(); await db.from('global_metrics').update({ total: metrics.total, nikopol: metrics.nikopol, zv: metrics.zv }).eq('id', 1); }
         async function updateCityDay(city, dIdx, val) { if(!isAdmin) return; cityDays[city][dIdx] = parseInt(val)||0; renderUI(); await db.from('global_metrics').update({ city_days: cityDays }).eq('id', 1); }
 
+        /* ИНСТРУМЕНТЫ (TOOLS) - ЛОГИКА */
+        async function fetchTools() {
+            let { data, error } = await db.from('system_tools').select('*').order('created_at', { ascending: false });
+            if (!error && data) {
+                toolsList = data;
+                renderTools();
+            }
+        }
+
+        function filterToolsCategory(cat, el) {
+            activeToolCategory = cat;
+            document.querySelectorAll('.filter-chips .chip').forEach(c => c.classList.remove('active'));
+            if(el) el.classList.add('active');
+            renderTools();
+        }
+
+        function renderTools() {
+            const grid = document.getElementById('toolsGrid');
+            const search = document.getElementById('toolSearchInput').value.toLowerCase();
+            grid.innerHTML = '';
+
+            let filtered = toolsList.filter(item => {
+                let matchCat = activeToolCategory === 'all' || item.category === activeToolCategory;
+                let matchSearch = item.title.toLowerCase().includes(search) || 
+                                  (item.description && item.description.toLowerCase().includes(search)) ||
+                                  (item.tags && item.tags.some(t => t.toLowerCase().includes(search)));
+                return matchCat && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 40px;">
+                    <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
+                    Инструменты не найдены
+                </div>`;
+                return;
+            }
+
+            filtered.forEach(tool => {
+                const card = document.createElement('div');
+                card.className = 'tool-card';
+                
+                // Дефолтное изображение с адаптацией к проекту
+                let fallbackImg = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80';
+                let imgSrc = tool.image_url ? tool.image_url : fallbackImg;
+                if(imgSrc === 'image_963a6e.png') imgSrc = 'https://i.imgur.com/92aAKxU.png';
+
+                let tagsHtml = tool.tags ? tool.tags.map(t => `<span class="tag-item">#${t.trim()}</span>`).join('') : '';
+
+                let adminBtns = isAdmin ? `
+                    <div class="admin-controls-overlay">
+                        <button class="btn-mini-admin" onclick="openEditToolModal(${tool.id})" title="Редактировать"><i class="fas fa-edit"></i></button>
+                        <button class="btn-mini-admin delete" onclick="deleteTool(${tool.id})" title="Удалить"><i class="fas fa-trash"></i></button>
+                    </div>
+                ` : '';
+
+                let actionBtn = tool.type === 'link' ? 
+                    `<a href="${tool.content}" target="_blank" class="btn-primary" style="width:100%; justify-content:center; text-decoration:none;"><i class="fas fa-external-link-alt"></i> Перейти</a>` :
+                    `<button class="btn-primary" style="width:100%; justify-content:center;" onclick="copyPrompt(\`${escapeJsString(tool.content)}\`)"><i class="fas fa-copy"></i> Скопировать Промпт</button>`;
+
+                card.innerHTML = `
+                    ${adminBtns}
+                    <img src="${imgSrc}" class="tool-card-img" onerror="this.src='${fallbackImg}'">
+                    <div class="tool-card-body">
+                        <span class="tool-category-badge">${tool.category || 'Общие'}</span>
+                        <h4 class="tool-card-title">${tool.title}</h4>
+                        <p class="tool-card-desc">${tool.description || ''}</p>
+                        <div class="tool-tags">${tagsHtml}</div>
+                        <div class="tool-card-footer">${actionBtn}</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function escapeJsString(str) {
+            return str ? str.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$') : '';
+        }
+
+        function copyPrompt(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                triggerToast('Промпт успешно скопирован!', 'https://i.imgur.com/92aAKxU.png');
+            });
+        }
+
+        function toggleToolTypeFields() {
+            const type = document.getElementById('toolType').value;
+            const label = document.getElementById('toolContentLabel');
+            label.innerText = type === 'link' ? 'URL Сайта (Ссылка)' : 'Текст Промпта';
+        }
+
+        function openAddToolModal() {
+            document.getElementById('toolEditId').value = '';
+            document.getElementById('toolModalTitle').innerText = 'Добавить инструмент';
+            document.getElementById('toolTitle').value = '';
+            document.getElementById('toolCategory').value = 'Промпты';
+            document.getElementById('toolType').value = 'prompt';
+            document.getElementById('toolContent').value = '';
+            document.getElementById('toolDesc').value = '';
+            document.getElementById('toolImageUrl').value = '';
+            document.getElementById('toolTags').value = '';
+            toggleToolTypeFields();
+            document.getElementById('toolModal').classList.add('active');
+        }
+
+        function openEditToolModal(id) {
+            const tool = toolsList.find(t => t.id === id);
+            if (!tool) return;
+            document.getElementById('toolEditId').value = tool.id;
+            document.getElementById('toolModalTitle').innerText = 'Редактировать инструмент';
+            document.getElementById('toolTitle').value = tool.title || '';
+            document.getElementById('toolCategory').value = tool.category || 'Промпты';
+            document.getElementById('toolType').value = tool.type || 'prompt';
+            document.getElementById('toolContent').value = tool.content || '';
+            document.getElementById('toolDesc').value = tool.description || '';
+            document.getElementById('toolImageUrl').value = tool.image_url || '';
+            document.getElementById('toolTags').value = tool.tags ? tool.tags.join(', ') : '';
+            toggleToolTypeFields();
+            document.getElementById('toolModal').classList.add('active');
+        }
+
+        function closeToolModal() {
+            document.getElementById('toolModal').classList.remove('active');
+        }
+
+        async function saveTool() {
+            if(!isAdmin) return;
+            const id = document.getElementById('toolEditId').value;
+            const title = document.getElementById('toolTitle').value.trim();
+            const category = document.getElementById('toolCategory').value;
+            const type = document.getElementById('toolType').value;
+            const content = document.getElementById('toolContent').value.trim();
+            const description = document.getElementById('toolDesc').value.trim();
+            const image_url = document.getElementById('toolImageUrl').value.trim();
+            const tagsRaw = document.getElementById('toolTags').value;
+            const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
+
+            if (!title || !content) return alert('Заполните название и содержимое!');
+
+            const payload = { title, category, type, content, description, image_url, tags };
+
+            if (id) {
+                await db.from('system_tools').update(payload).eq('id', id);
+                triggerToast('Инструмент обновлен', 'https://i.imgur.com/92aAKxU.png');
+            } else {
+                await db.from('system_tools').insert([payload]);
+                triggerToast('Новый инструмент добавлен', 'https://i.imgur.com/92aAKxU.png');
+            }
+
+            closeToolModal();
+            fetchTools();
+        }
+
+        async function deleteTool(id) {
+            if(!isAdmin) return;
+            if(confirm('Удалить данный инструмент?')) {
+                await db.from('system_tools').delete().eq('id', id);
+                triggerToast('Инструмент удален', 'https://i.imgur.com/92aAKxU.png');
+                fetchTools();
+            }
+        }
+
+        /* НАВИГАЦИЯ */
+        function switchView(view, btn) {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+            
+            document.getElementById('viewMain').classList.add('hidden');
+            document.getElementById('viewTools').classList.add('hidden');
+            document.getElementById('viewArchive').classList.add('hidden');
+
+            if(view === 'main') document.getElementById('viewMain').classList.remove('hidden');
+            else if(view === 'tools') { document.getElementById('viewTools').classList.remove('hidden'); fetchTools(); }
+            else if(view === 'archive') { document.getElementById('viewArchive').classList.remove('hidden'); loadArchives(); }
+        }
+
+        /* ГРАФИКИ И УВЕДОМЛЕНИЯ */
         function setRegionChartType(type) {
             currentRegionType = type;
             document.getElementById('btnPie').classList.toggle('active', type === 'doughnut');
@@ -650,29 +922,21 @@
             const gridCol = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
             
             const ctxR = document.getElementById('regionChart').getContext('2d');
-            let gradNk = ctxR.createLinearGradient(0, 0, 0, 400); gradNk.addColorStop(0, '#38bdf8'); gradNk.addColorStop(1, '#0284c7');
-            let gradZv = ctxR.createLinearGradient(0, 0, 0, 400); gradZv.addColorStop(0, '#fb923c'); gradZv.addColorStop(1, '#ea580c');
-            let gradKam = ctxR.createLinearGradient(0, 0, 0, 400); gradKam.addColorStop(0, '#a78bfa'); gradKam.addColorStop(1, '#7c3aed');
-
             if(chartRegionInst) {
                 chartRegionInst.data.datasets[0].data = [metrics.nikopol, metrics.zv, kamCalc];
                 chartRegionInst.update();
             } else {
-                let options = { responsive: true, maintainAspectRatio: false, cutout: currentRegionType === 'doughnut' ? '75%' : undefined, plugins: { legend: { display: currentRegionType === 'doughnut', position: 'right', labels: { color: txtCol, font: {size: 13, weight:'600'}, usePointStyle: true, pointStyle: 'circle' } } } };
-                if (currentRegionType === 'bar') { options.scales = { x: { grid:{display:false}, ticks: {color:txtCol, font:{size:12, weight:'600'}} }, y: { grid:{color:gridCol}, border:{display:false}, ticks: {color:txtCol, font:{size:12}} } }; }
+                let options = { responsive: true, maintainAspectRatio: false, cutout: currentRegionType === 'doughnut' ? '70%' : undefined, plugins: { legend: { display: currentRegionType === 'doughnut', position: 'right', labels: { color: txtCol, font: {size: 11, weight:'600'} } } } };
+                if (currentRegionType === 'bar') { options.scales = { x: { grid:{display:false}, ticks: {color:txtCol} }, y: { grid:{color:gridCol}, ticks: {color:txtCol} } }; }
                 
                 chartRegionInst = new Chart(ctxR, {
                     type: currentRegionType,
-                    data: { labels: ['Никополь', 'Жёлтые Воды', 'Каменское'], datasets: [{ data: [metrics.nikopol, metrics.zv, kamCalc], backgroundColor: [gradNk, gradZv, gradKam], borderRadius: currentRegionType==='bar'?8:0, borderWidth: currentRegionType==='doughnut'?3:0, borderColor: isDark ? '#0f172a' : '#ffffff', hoverOffset: 12 }] },
+                    data: { labels: ['Никополь', 'Жёлтые Воды', 'Каменское'], datasets: [{ data: [metrics.nikopol, metrics.zv, kamCalc], backgroundColor: ['#38bdf8', '#fb923c', '#a78bfa'], borderRadius: 6 }] },
                     options: options
                 });
             }
 
             const ctxL = document.getElementById('cityLineChart').getContext('2d');
-            let fillNk = ctxL.createLinearGradient(0, 0, 0, 400); fillNk.addColorStop(0, 'rgba(56, 189, 248, 0.6)'); fillNk.addColorStop(1, 'rgba(56, 189, 248, 0.05)');
-            let fillZv = ctxL.createLinearGradient(0, 0, 0, 400); fillZv.addColorStop(0, 'rgba(251, 146, 60, 0.6)'); fillZv.addColorStop(1, 'rgba(251, 146, 60, 0.05)');
-            let fillKam = ctxL.createLinearGradient(0, 0, 0, 400); fillKam.addColorStop(0, 'rgba(167, 139, 250, 0.6)'); fillKam.addColorStop(1, 'rgba(167, 139, 250, 0.05)');
-
             if(chartLineInst) {
                 chartLineInst.data.datasets[0].data = cityDays.nikopol; chartLineInst.data.datasets[1].data = cityDays.zv; chartLineInst.data.datasets[2].data = cityDays.kamenka;
                 chartLineInst.update();
@@ -680,217 +944,32 @@
                 chartLineInst = new Chart(ctxL, {
                     type: 'line',
                     data: { labels: ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ'], datasets: [
-                        { label: 'Никополь', data: cityDays.nikopol, borderColor: '#38bdf8', backgroundColor: fillNk, fill: true, tension: 0.5, borderWidth: 4, pointRadius: 6, pointBackgroundColor: '#0f172a', pointBorderColor: '#38bdf8', pointBorderWidth: 3, pointHoverRadius: 9 },
-                        { label: 'ЖВ', data: cityDays.zv, borderColor: '#fb923c', backgroundColor: fillZv, fill: true, tension: 0.5, borderWidth: 4, pointRadius: 6, pointBackgroundColor: '#0f172a', pointBorderColor: '#fb923c', pointBorderWidth: 3, pointHoverRadius: 9 },
-                        { label: 'Каменское', data: cityDays.kamenka, borderColor: '#a78bfa', backgroundColor: fillKam, fill: true, tension: 0.5, borderWidth: 4, pointRadius: 6, pointBackgroundColor: '#0f172a', pointBorderColor: '#a78bfa', pointBorderWidth: 3, pointHoverRadius: 9 }
+                        { label: 'Никополь', data: cityDays.nikopol, borderColor: '#38bdf8', tension: 0.4 },
+                        { label: 'ЖВ', data: cityDays.zv, borderColor: '#fb923c', tension: 0.4 },
+                        { label: 'Каменское', data: cityDays.kamenka, borderColor: '#a78bfa', tension: 0.4 }
                     ] },
-                    options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, plugins: { legend: { display: false } }, scales: { x: { grid:{display:false}, ticks: {color:txtCol, font:{size:12, weight:'600'}} }, y: { grid:{color:gridCol}, border:{display:false}, ticks: {color:txtCol, font:{size:12}} } } }
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid:{display:false}, ticks: {color:txtCol} }, y: { grid:{color:gridCol}, ticks: {color:txtCol} } } }
                 });
             }
         }
 
-        function switchView(view) {
-            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
-            if(view === 'main') {
-                document.getElementById('viewMain').classList.remove('hidden');
-                document.getElementById('viewArchive').classList.add('hidden');
-            } else {
-                document.getElementById('viewMain').classList.add('hidden');
-                document.getElementById('viewArchive').classList.remove('hidden');
-                loadArchives();
-            }
+        function triggerToast(msg, img) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<img src="${img || 'https://i.imgur.com/92aAKxU.png'}"><span>${msg}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
         }
 
-        function openArchiveModal() { document.getElementById('saveWeekModal').classList.add('active'); }
-        function closeArchiveModal() { document.getElementById('saveWeekModal').classList.remove('active'); }
-        
-        async function processArchiveWeek() {
-            const start = document.getElementById('archStart').value;
-            const end = document.getElementById('archEnd').value;
-            const pin = document.getElementById('archPin').value;
-
-            if(!start || !end) return alert("Выберите даты начала и конца недели!");
-            if(pin !== "0402") return alert("Неверный PIN!");
-
-            document.getElementById('loader').style.visibility = 'visible';
-            document.getElementById('loader').style.opacity = '1';
-            
-            try {
-                await db.from('weekly_archives').insert([{ week_start: start, week_end: end, employee_data: employees, attendance_data: employees.map(e => ({id: e.id, att: e.att})), global_metrics: metrics, city_days: cityDays }]);
-                for(let emp of employees) { await db.from('employees').update({ mon:0, tue:0, wed:0, thu:0, fri:0, sat:0, att_mon:0, att_tue:0, att_wed:0, att_thu:0, att_fri:0, att_sat:0 }).eq('id', emp.id); }
-                const zCity = { nikopol: [0,0,0,0,0,0], zv: [0,0,0,0,0,0], kamenka: [0,0,0,0,0,0] };
-                await db.from('global_metrics').update({ total:0, nikopol:0, zv:0, city_days: zCity }).eq('id', 1);
-                
-                triggerToast('Неделя успешно сохранена в Архив и очищена!', 'https://i.imgur.com/92aAKxU.png');
-                setTimeout(() => window.location.reload(), 2000);
-            } catch(e) { 
-                alert("Ошибка архивации: " + e.message); 
-                document.getElementById('loader').style.opacity = '0';
-                document.getElementById('loader').style.visibility = 'hidden';
-            }
-        }
-
-        async function loadArchives() {
-            const container = document.getElementById('archiveContainer');
-            container.innerHTML = '<div class="loader-spinner" style="margin: 40px auto;"></div>';
-            try {
-                let { data, error } = await db.from('weekly_archives').select('*').order('created_at', { ascending: false });
-                if (error) throw error;
-                globalArchiveData = data;
-                if(!data || data.length === 0) {
-                    container.innerHTML = '<p style="color:var(--text-muted); font-size:1.2rem;">Архив пока пуст. Завершите и сохраните неделю на главном дашборде.</p>';
-                    return;
-                }
-                container.innerHTML = '';
-                data.forEach(arch => {
-                    let div = document.createElement('div'); div.className = 'archive-card';
-                    div.innerHTML = `
-                        <div class="date-range"><i class="fas fa-calendar-alt"></i> ${new Date(arch.week_start).toLocaleDateString()} — ${new Date(arch.week_end).toLocaleDateString()}</div>
-                        <h3>Итоги недели</h3>
-                        <p style="font-size:0.9rem; color:var(--text-muted);">Создано: ${new Date(arch.created_at).toLocaleString()}</p>
-                        <button class="btn-primary" style="width:100%; margin-top:20px; background:rgba(56, 189, 248, 0.1); border:1px solid var(--accent-color); color:var(--accent-color); box-shadow:none; animation:none;"><i class="fas fa-eye"></i> Открыть отчет</button>
-                    `;
-                    div.onclick = () => openArchiveDetails(arch.id);
-                    container.appendChild(div);
-                });
-            } catch(e) { container.innerHTML = `<p style="color:var(--danger-color);">Ошибка загрузки архивов.</p>`; }
-        }
-
-        function openArchiveDetails(archId) {
-            const arch = globalArchiveData.find(a => a.id === archId);
-            if(!arch) return;
-            document.getElementById('archiveDetailsModal').classList.add('active');
-            document.getElementById('archDetailTitle').innerText = `Сводка: ${new Date(arch.week_start).toLocaleDateString()} - ${new Date(arch.week_end).toLocaleDateString()}`;
-            
-            const empData = typeof arch.employee_data === 'string' ? JSON.parse(arch.employee_data) : arch.employee_data;
-            const attData = typeof arch.attendance_data === 'string' ? JSON.parse(arch.attendance_data) : arch.attendance_data;
-            const metData = typeof arch.global_metrics === 'string' ? JSON.parse(arch.global_metrics) : arch.global_metrics;
-            const cDays = typeof arch.city_days === 'string' ? JSON.parse(arch.city_days) : arch.city_days;
-
-            document.getElementById('archKpiCount').innerText = empData.length;
-            document.getElementById('archKpiTotal').innerText = metData.total || 0;
-            document.getElementById('archKpiNk').innerText = metData.nikopol || 0;
-            document.getElementById('archKpiZv').innerText = metData.zv || 0;
-
-            const tEmp = document.getElementById('archEmpBody'); tEmp.innerHTML = '';
-            const tAtt = document.getElementById('archAttBody'); tAtt.innerHTML = '';
-            
-            empData.forEach(e => {
-                let sum = e.data.reduce((a,b)=>a+b, 0);
-                let tr = document.createElement('tr');
-                tr.innerHTML = `<td style="color:${e.color};font-weight:700;">${e.name}</td>` + 
-                    e.data.map((v, i) => `<td class="day-col-${i}">${v}</td>`).join('') + 
-                    `<td style="color:var(--success-color); font-weight:800;">${sum}</td>`;
-                tEmp.appendChild(tr);
-
-                let trAtt = document.createElement('tr');
-                let attArr = e.att || (attData.find(a => a.id === e.id)?.att) || [0,0,0,0,0,0];
-                let attCells = `<td style="color:${e.color};font-weight:700;">${e.name}</td>`;
-                attArr.forEach((st, i) => { attCells += `<td class="day-col-${i}"><div class="att-cell att-${st}"></div></td>`; });
-                trAtt.innerHTML = attCells; tAtt.appendChild(trAtt);
-            });
-
-            const tCity = document.getElementById('archCityBody'); tCity.innerHTML = '';
-            const cityCfg = [{ id: 'nikopol', name: 'Никополь', color: '#38bdf8' }, { id: 'zv', name: 'Жёлтые Воды', color: '#fb923c' }, { id: 'kamenka', name: 'Каменское', color: '#a78bfa' }];
-            let colTotals = [0,0,0,0,0,0];
-            let grandTotal = 0;
-
-            cityCfg.forEach(c => {
-                let d = (cDays && cDays[c.id]) ? cDays[c.id] : [0,0,0,0,0,0];
-                let rowSum = 0;
-                let cells = d.map((v, i) => { colTotals[i] += parseInt(v); rowSum += parseInt(v); return `<td class="day-col-${i}">${v}</td>`; }).join('');
-                grandTotal += rowSum;
-                let tr = document.createElement('tr');
-                tr.innerHTML = `<td style="color:${c.color};font-weight:700;">${c.name}</td>` + cells + `<td style="color:var(--success-color); font-weight:bold;">${rowSum}</td>`;
-                tCity.appendChild(tr);
-            });
-
-            let tfootTr = document.createElement('tr');
-            tfootTr.style.background = 'rgba(255,255,255,0.03)';
-            tfootTr.innerHTML = `<td style="font-weight:800;color:var(--text-main); text-transform: uppercase;">ОБЩИЙ ИТОГ</td>` + 
-                colTotals.map((tot, i) => `<td class="day-col-${i}" style="color:var(--accent-color);font-weight:bold">${tot}</td>`).join('') + 
-                `<td style="color:var(--success-color); font-weight:900;">${grandTotal}</td>`;
-            tCity.appendChild(tfootTr);
-        }
-
-        function closeArchiveDetails() { document.getElementById('archiveDetailsModal').classList.remove('active'); }
-
-        // Дополнительные утилиты интерфейса
         function openProfileSettings() { window.location.href = 'profile.html'; }
-        
-        function logout() { 
-            localStorage.removeItem('crm_username');
-            localStorage.removeItem('crm_role'); 
-            window.location.href = 'login.html'; 
-        }
-
-        function testSound() { notifySound.play().catch(e => console.log('Sound blocked by browser: ', e)); }
-
+        function logout() { localStorage.clear(); window.location.href = 'login.html'; }
         function toggleBaseTheme() {
             const current = document.documentElement.getAttribute('data-theme');
-            const nextTheme = current === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', nextTheme);
-            localStorage.setItem('crm_theme', nextTheme);
-            if(chartRegionInst) { chartRegionInst.destroy(); chartRegionInst = null; }
-            if(chartLineInst) { chartLineInst.destroy(); chartLineInst = null; }
+            const next = current === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('crm_theme', next);
             updateCharts(document.getElementById('calcKam').innerText);
-        }
-
-        function filterData() {
-            let input = document.getElementById('searchInput').value.toLowerCase();
-            let mainRows = document.getElementById('empDataBody').getElementsByTagName('tr');
-            let attRows = document.getElementById('empAttBody').getElementsByTagName('tr');
-            
-            for (let i = 0; i < mainRows.length; i++) {
-                let nameMain = mainRows[i].getElementsByTagName('td')[0].innerText.toLowerCase();
-                if (nameMain.includes(input)) {
-                    mainRows[i].style.display = "";
-                    if(attRows[i]) attRows[i].style.display = "";
-                } else {
-                    mainRows[i].style.display = "none";
-                    if(attRows[i]) attRows[i].style.display = "none";
-                }
-            }
-        }
-
-        async function saveSettings() {
-            if(!isAdmin) return;
-            metrics.daily_plan = parseInt(document.getElementById('setPlanDay').value) || 26;
-            metrics.weekly_plan = parseInt(document.getElementById('setPlanWeek').value) || 130;
-            renderUI();
-            await db.from('global_metrics').update({ daily_plan: metrics.daily_plan, weekly_plan: metrics.weekly_plan }).eq('id', 1);
-            triggerToast('KPI настройки сохранены!', 'https://i.imgur.com/92aAKxU.png');
-        }
-
-        function triggerToast(msg, icon) {
-            let container = document.getElementById('toastContainer');
-            let t = document.createElement('div');
-            t.className = 'toast';
-            t.innerHTML = `<img src="${icon}"><span>${msg}</span>`;
-            container.appendChild(t);
-            setTimeout(() => { t.style.opacity = '0'; setTimeout(()=>t.remove(), 500); }, 4000);
-        }
-
-        function sendGlobalAlert() {
-            if(!isAdmin) return;
-            let msg = document.getElementById('admMsg').value.trim();
-            if(!msg) return;
-            triggerToast('Объявление отправлено: ' + msg, 'https://i.imgur.com/92aAKxU.png');
-            document.getElementById('admMsg').value = '';
-        }
-
-        function exportExcelJS() {
-            triggerToast('Выгрузка в Excel начата...', 'https://i.imgur.com/92aAKxU.png');
-            setTimeout(() => alert('Модуль ExcelJS интегрирован, требуется настройка столбцов (в разработке)'), 1000);
-        }
-
-        function toggleChat() {
-            triggerToast('Чат находится в разработке', 'https://i.imgur.com/92aAKxU.png');
-        }
-
-        function checkTimeTriggers() {
-            // Фоновая проверка триггеров
         }
     </script>
 </body>
